@@ -4,8 +4,7 @@
 
 #pragma once
 
-#include "AHRS.h"
-// #include <frc/ADIS16470_IMU.h>
+#include <frc/ADIS16470_IMU.h>
 #include <frc/filter/SlewRateLimiter.h>
 #include <frc/geometry/Pose2d.h>
 #include <frc/geometry/Rotation2d.h>
@@ -13,7 +12,6 @@
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
 #include <frc2/command/SubsystemBase.h>
-#include <frc2/command/Commands.h>
 
 #include "Constants.h"
 #include "MAXSwerveModule.h"
@@ -50,18 +48,10 @@ class DriveSubsystem : public frc2::SubsystemBase {
    */
   void SetX();
 
-  //sets slow factor for the drivebase
-  frc2::CommandPtr setSlowFactor(double slow);
-
   /**
    * Resets the drive encoders to currently read a position of 0.
    */
   void ResetEncoders();
-
-  /**
-   * Translates NaxV gyro values to the expected IMU format
-  */
- double getNavXHeading() const;
 
   /**
    * Sets the drive MotorControllers to a power from -1 to 1.
@@ -74,16 +64,6 @@ class DriveSubsystem : public frc2::SubsystemBase {
    * @return the robot's heading in degrees, from 180 to 180
    */
   units::degree_t GetHeading() const;
-
-  /**
-   * Returns the roll of the robot, from -180 to 180
-  */
-  double GetRoll();
-
-  /**
-   * Autobalances on the target (must be facing perpendicular to target to work)
-  */
-  void autoBalance();
 
   /**
    * Zeroes the heading of the robot.
@@ -121,8 +101,6 @@ class DriveSubsystem : public frc2::SubsystemBase {
       frc::Translation2d{-DriveConstants::kWheelBase / 2,
                          -DriveConstants::kTrackWidth / 2}};
 
-    double slowFactor = 0.6;
-
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
@@ -133,8 +111,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
   MAXSwerveModule m_rearRight;
 
   // The gyro sensor
-  // frc::ADIS16470_IMU m_gyro;
-  AHRS ahrs{frc::I2C::Port::kMXP};
+  frc::ADIS16470_IMU m_gyro;
 
   // Slew rate filter variables for controlling lateral acceleration
   double m_currentRotation = 0.0;

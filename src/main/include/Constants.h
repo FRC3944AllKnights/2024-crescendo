@@ -30,15 +30,15 @@ namespace DriveConstants {
 constexpr units::meters_per_second_t kMaxSpeed = 4.8_mps;
 constexpr units::radians_per_second_t kMaxAngularSpeed{2 * std::numbers::pi};
 
-constexpr double kDirectionSlewRate = 0.25;   // radians per second
-constexpr double kMagnitudeSlewRate = 0.5;   // percent per second (1 = 100%)
-constexpr double kRotationalSlewRate = 1;  // percent per second (1 = 100%)
+constexpr double kDirectionSlewRate = 1.2;   // radians per second
+constexpr double kMagnitudeSlewRate = 1.8;   // percent per second (1 = 100%)
+constexpr double kRotationalSlewRate = 2.0;  // percent per second (1 = 100%)
 
 // Chassis configuration
 constexpr units::meter_t kTrackWidth =
-    0.546_m;  // Distance between centers of right and left wheels on robot
+    0.6731_m;  // Distance between centers of right and left wheels on robot
 constexpr units::meter_t kWheelBase =
-    0.546_m;  // Distance between centers of front and back wheels on robot
+    0.6731_m;  // Distance between centers of front and back wheels on robot
 
 // Angular offsets of the modules relative to the chassis in radians
 constexpr double kFrontLeftChassisAngularOffset = -std::numbers::pi / 2;
@@ -66,7 +66,7 @@ constexpr bool kTurningEncoderInverted = true;
 // The MAXSwerve module can be configured with one of three pinion gears: 12T,
 // 13T, or 14T. This changes the drive speed of the module (a pinion gear with
 // more teeth will result in a robot that drives faster).
-constexpr int kDrivingMotorPinionTeeth = 13;
+constexpr int kDrivingMotorPinionTeeth = 14;
 
 // Calculations required for driving motor conversion factors and feed forward
 constexpr double kDrivingMotorFreeSpeedRps =
@@ -122,10 +122,10 @@ constexpr units::ampere_t kTurningMotorCurrentLimit = 20_A;
 }  // namespace ModuleConstants
 
 namespace AutoConstants {
-constexpr auto kMaxSpeed = 2.0_mps;
-constexpr auto kMaxAcceleration = 1_mps_sq;
-constexpr auto kMaxAngularSpeed = 1.142_rad_per_s;
-constexpr auto kMaxAngularAcceleration = 1.142_rad_per_s_sq;
+constexpr auto kMaxSpeed = 3_mps;
+constexpr auto kMaxAcceleration = 3_mps_sq;
+constexpr auto kMaxAngularSpeed = 3.142_rad_per_s;
+constexpr auto kMaxAngularAcceleration = 3.142_rad_per_s_sq;
 
 constexpr double kPXController = 0.5;
 constexpr double kPYController = 0.5;
@@ -139,44 +139,3 @@ namespace OIConstants {
 constexpr int kDriverControllerPort = 0;
 constexpr double kDriveDeadband = 0.05;
 }  // namespace OIConstants
-
-namespace ArmConstants {
-//shoulder pid constants
-constexpr double shoulderP = 7.5e-5;
-constexpr double shoulderI = 7.5e-7;
-constexpr double shoulderD = 0;
-constexpr double shoulderFF = 0.000156;
-constexpr double shoulderMinOutput = -1;
-constexpr double shoulderMaxOutput = 1;
-
-//shoulder smartMotion constants
-constexpr double shoulderMaxVel = 2500;
-constexpr double shoulderMinVel = 0;
-constexpr double shoulderMaxAcc = 1500;
-constexpr double shoulderAllErr = 0;
-
-//elbow pid constants
-constexpr double elbowP = 5e-5;
-constexpr double elbowI = 1e-7;
-constexpr double elbowD = 0.0;
-constexpr double elbowFF = 0.000156;
-constexpr double elbowMinOutput = -1;
-constexpr double elbowMaxOutput = 1;
-
-//elbow smartMotion constants
-constexpr double elbowMaxVel = 4000;
-constexpr double elbowMinVel = 0;
-constexpr double elbowMaxAcc = 2000;
-constexpr double elbowAllErr = 0;
-}
-
-namespace IntakeConstants {
-//intake pid constants
-constexpr double intakeP = 5e-3;
-constexpr double intakeI = 0;
-constexpr double intakeD = 0;
-constexpr double intakeIZone = 0;
-constexpr double intakeFF = 0;
-constexpr double intakeMaxOutput = 1;
-constexpr double intakeMinOutput = -1;
-}

@@ -7,12 +7,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandScheduler.h>
 
-#include <cameraserver/CameraServer.h>
-
-void Robot::RobotInit() {
-  m_container.initAllSubsystems();
-  frc::CameraServer::StartAutomaticCapture();
-}
+void Robot::RobotInit() {}
 
 /**
  * This function is called every 20 ms, no matter the mode. Use
@@ -48,8 +43,6 @@ void Robot::AutonomousInit() {
 void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {
-  //ensures that we don't die during testing
-  m_container.initAllSubsystems();
   // This makes sure that the autonomous stops running when
   // teleop starts running. If you want the autonomous to
   // continue until interrupted by another command, remove

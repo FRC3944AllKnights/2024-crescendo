@@ -13,14 +13,9 @@
 #include <frc2/command/PIDCommand.h>
 #include <frc2/command/ParallelRaceGroup.h>
 #include <frc2/command/RunCommand.h>
-#include <frc2/command/button/CommandXboxController.h>
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
-#include "subsystems/ArmSubsystem.h"
-#include "subsystems/IntakeSubsystem.h"
-
-#include "commands/autonomous.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -34,22 +29,15 @@ class RobotContainer {
   RobotContainer();
 
   frc2::Command* GetAutonomousCommand();
-  void initAllSubsystems();
 
  private:
   // The driver's controller
-  frc2::CommandXboxController m_driverController{OIConstants::kDriverControllerPort};
+  frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
 
   // The robot's subsystems and commands are defined here...
 
   // The robot's subsystems
   DriveSubsystem m_drive;
-  ArmSubsystem m_arm;
-  IntakeSubsystem m_intake;
-
-  frc2::CommandPtr m_placeCone = autos::PlaceCone(&m_drive, &m_arm, &m_intake);
-  frc2::CommandPtr m_placeConeAndDock = autos::PlaceConeAndDock(&m_drive, &m_arm, &m_intake);
-  frc2::CommandPtr m_placeConeAndBalance = autos::PlaceConeAndBalance(&m_drive, &m_arm, &m_intake);
 
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;

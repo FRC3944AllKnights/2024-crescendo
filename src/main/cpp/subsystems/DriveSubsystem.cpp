@@ -12,8 +12,6 @@
 #include "Constants.h"
 #include "utils/SwerveUtils.h"
 
-#include <frc/SmartDashboard/SmartDashboard.h>
-
 using namespace DriveConstants;
 
 DriveSubsystem::DriveSubsystem()
@@ -26,23 +24,16 @@ DriveSubsystem::DriveSubsystem()
       m_rearRight{kRearRightDrivingCanId, kRearRightTurningCanId,
                   kRearRightChassisAngularOffset},
       m_odometry{kDriveKinematics,
-                 frc::Rotation2d(units::degree_t{getNavXHeading()}),
+                 frc::Rotation2d(units::radian_t{
+                     m_gyro.GetAngle(frc::ADIS16470_IMU::IMUAxis::kZ)}),
                  {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
                   m_rearLeft.GetPosition(), m_rearRight.GetPosition()},
                  frc::Pose2d{}} {}
 
-frc2::CommandPtr DriveSubsystem::setSlowFactor(double slow){
-  return frc2::cmd::RunOnce([this, slow] { this->slowFactor = slow; }, {this});
-}
-
-double DriveSubsystem::getNavXHeading() const{
-  //convert to robot reference frame and set initial offset
-  return -ahrs.GetAngle() + 180.0;
-}
-
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
-  m_odometry.Update(frc::Rotation2d(units::degree_t{getNavXHeading()}),
+  m_odometry.Update(frc::Rotation2d(units::radian_t{
+                        m_gyro.GetAngle(frc::ADIS16470_IMU::IMUAxis::kZ)}),
                     {m_frontLeft.GetPosition(), m_rearLeft.GetPosition(),
                      m_frontRight.GetPosition(), m_rearRight.GetPosition()});
 }
@@ -51,21 +42,14 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
                            units::meters_per_second_t ySpeed,
                            units::radians_per_second_t rot, bool fieldRelative,
                            bool rateLimit) {
-  double xSpeedVal = xSpeed.value();
-  double ySpeedVal = ySpeed.value();
-  double rotVal = rot.value();
-
   double xSpeedCommanded;
   double ySpeedCommanded;
 
-  frc::SmartDashboard::PutNumber("gyro heading",getNavXHeading());
-  frc::SmartDashboard::PutNumber("gyro rate", -ahrs.GetRate());
-
   if (rateLimit) {
     // Convert XY to polar for rate limiting
-    double inputTranslationDir = atan2(ySpeedVal, xSpeedVal);
+    double inputTranslationDir = atan2(ySpeed.value(), xSpeed.value());
     double inputTranslationMag =
-        sqrt(pow(xSpeedVal, 2) + pow(ySpeedVal, 2));
+        sqrt(pow(xSpeed.value(), 2) + pow(ySpeed.value(), 2));
 
     // Calculate the direction slew rate based on an estimate of the lateral
     // acceleration
@@ -108,12 +92,12 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
 
     xSpeedCommanded = m_currentTranslationMag * cos(m_currentTranslationDir);
     ySpeedCommanded = m_currentTranslationMag * sin(m_currentTranslationDir);
-    m_currentRotation = m_rotLimiter.Calculate(rotVal);
+    m_currentRotation = m_rotLimiter.Calculate(rot.value());
 
   } else {
-    xSpeedCommanded = xSpeedVal;
-    ySpeedCommanded = ySpeedVal;
-    m_currentRotation = rotVal;
+    xSpeedCommanded = xSpeed.value();
+    ySpeedCommanded = ySpeed.value();
+    m_currentRotation = rot.value();
   }
 
   // Convert the commanded speeds into the correct units for the drivetrain
@@ -128,7 +112,8 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
       fieldRelative
           ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
                 xSpeedDelivered, ySpeedDelivered, rotDelivered,
-                frc::Rotation2d(units::degree_t{getNavXHeading()}))
+                frc::Rotation2d(units::radian_t{
+                    m_gyro.GetAngle(frc::ADIS16470_IMU::IMUAxis::kZ)}))
           : frc::ChassisSpeeds{xSpeedDelivered, ySpeedDelivered, rotDelivered});
 
   kDriveKinematics.DesaturateWheelSpeeds(&states, DriveConstants::kMaxSpeed);
@@ -170,28 +155,16 @@ void DriveSubsystem::ResetEncoders() {
 }
 
 units::degree_t DriveSubsystem::GetHeading() const {
-  return units::degree_t{getNavXHeading()};
+  return frc::Rotation2d(
+             units::radian_t{m_gyro.GetAngle(frc::ADIS16470_IMU::IMUAxis::kZ)})
+      .Degrees();
 }
 
-double DriveSubsystem::GetRoll() {
-  return ahrs.GetRoll();
+void DriveSubsystem::ZeroHeading() { m_gyro.Reset(); }
+
+double DriveSubsystem::GetTurnRate() {
+  return -m_gyro.GetRate(frc::ADIS16470_IMU::IMUAxis::kZ).value();
 }
-
-void DriveSubsystem::autoBalance() {
-  //extremely basic bang-bang controller that creeps forward or backward if charge station isn't level
-  frc::SmartDashboard::PutNumber("gyro roll",GetRoll());
-  if(GetRoll() > 8.0){
-    Drive(0.06_mps, 0_mps, 0_rad_per_s, false, false);
-  }else if(GetRoll() < -8.0){
-    Drive(-0.06_mps, 0_mps, 0_rad_per_s, false, false);
-  }else{
-    Drive(0_mps, 0_mps, 0_rad_per_s, false, false);
-  }
-}
-
-void DriveSubsystem::ZeroHeading() { ahrs.Reset(); }
-
-double DriveSubsystem::GetTurnRate() { return -ahrs.GetRate(); }
 
 frc::Pose2d DriveSubsystem::GetPose() { return m_odometry.GetPose(); }
 
