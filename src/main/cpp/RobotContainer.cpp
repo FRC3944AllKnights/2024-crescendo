@@ -20,6 +20,8 @@
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
+#include "subsystems/IntakeSubsystem.h"
+
 
 using namespace DriveConstants;
 
@@ -49,7 +51,16 @@ RobotContainer::RobotContainer() {
 void RobotContainer::ConfigureButtonBindings() {
   frc2::JoystickButton(&m_driverController,
                        frc::XboxController::Button::kRightBumper)
+                       
       .WhileTrue(new frc2::RunCommand([this] { m_drive.SetX(); }, {&m_drive}));
+
+  frc2::JoystickButton(&m_driverController,
+                        frc::XboxController::Button::kLeftBumper)
+       .WhileFalse(new frc2::RunCommand([this] { m_ShootySubsystem.SetMotorSpeed(0);})).WhileTrue(new frc2::RunCommand([this] {m_ShootySubsystem.SetMotorSpeed(2000);}));
+
+  frc2::JoystickButton(&m_driverController,
+                        frc::XboxController::Button::kA)
+       .WhileFalse(new frc2::RunCommand([this] { m_IntakeSubsystem.SetIntakeMotorSpeed(0);})).WhileTrue(new frc2::RunCommand([this] {m_IntakeSubsystem.SetIntakeMotorSpeed(100);}));
 }
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {

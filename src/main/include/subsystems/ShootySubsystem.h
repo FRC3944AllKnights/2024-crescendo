@@ -10,8 +10,22 @@ class ShootySubsystem : public frc2::SubsystemBase {
 public:
     ShootySubsystem();
     void SetMotorSpeed(double speed);
+
     
 
 private:
-    rev::CANSparkMax m_motor{1, rev::CANSparkMax::MotorType::kBrushless};  // Replace '1' with the CAN ID of the Spark MAX
+    rev::CANSparkMax m_ShootyMotorTop{11, rev::CANSparkMax::MotorType::kBrushless};  // Replace '1' with the CAN ID of the Spark MAX
+    rev::CANSparkMax m_ShootyMotorBottom{12, rev::CANSparkMax::MotorType::kBrushless};
+
+    rev::SparkRelativeEncoder m_ShootyEncoderTop =
+        m_ShootyMotorTop.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor);
+    rev::SparkPIDController m_ShootyPIDControllerTop =
+        m_ShootyMotorTop.GetPIDController();
+
+    rev::SparkRelativeEncoder m_ShootyEncoderBottom =
+        m_ShootyMotorBottom.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor);
+    rev::SparkPIDController m_ShootyPIDControllerBottom =
+        m_ShootyMotorBottom.GetPIDController();
+
+
 };
