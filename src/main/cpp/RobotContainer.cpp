@@ -59,16 +59,11 @@ void RobotContainer::ConfigureButtonBindings() {
        .WhileFalse(new frc2::RunCommand([this] { m_ShootySubsystem.SetMotorSpeed(0);})).WhileTrue(new frc2::RunCommand([this] {m_ShootySubsystem.SetMotorSpeed(2000);}));
 
 
-  if (false){
+
   frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kA)
        .WhileFalse(new frc2::RunCommand([this] { m_IntakeSubsystem.SetIntakeMotorSpeed(0);})).WhileTrue(new frc2::RunCommand([this] {m_IntakeSubsystem.SetIntakeMotorSpeed(100);}));
-  }
-  else{
-     frc2::JoystickButton(&m_driverController,
-                        frc::XboxController::Button::kA)
-       (new frc2::RunCommand([this] { m_IntakeSubsystem.SetIntakeMotorSpeed(0);}));
-  }
+
 }
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {

@@ -8,6 +8,9 @@
 
 IntakeSubsystem::IntakeSubsystem() {
     // Additional initialization if needed
+    m_colorMatcher.AddColorMatch(kGamePiece);
+    m_colorMatcher.AddColorMatch(kBackGround);
+    
     
 
     m_IntakeMotor.RestoreFactoryDefaults();
@@ -22,8 +25,24 @@ IntakeSubsystem::IntakeSubsystem() {
 }
 
 void IntakeSubsystem::SetIntakeMotorSpeed(double speed) {
-   
-    m_IntakePIDController.SetReference(speed, rev::ControlType::kVelocity);
-    
+    if (GamePieceDetected()){
+        m_IntakePIDController.SetReference(speed, rev::ControlType::kVelocity);
+    }
+    else{
+        m_IntakePIDController.SetReference(0, rev::ControlType::kVelocity);
+
+    }
 
 }
+
+bool IntakeSubsystem::GamePieceDetected(){
+    double confidence = 0.1;
+    frc::Color detectedColor = m_colorSensor.GetColor();
+    frc::Color matchedColor = m_colorMatcher.MatchClosestColor(detectedColor, confidence);
+
+    if (matchedColor == kGamePiece){
+        return true;
+    }
+    return false;
+}
+
