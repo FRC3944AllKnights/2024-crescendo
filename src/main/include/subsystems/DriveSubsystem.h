@@ -4,7 +4,8 @@
 
 #pragma once
 
-#include <frc/ADIS16470_IMU.h>
+#include "AHRS.h"
+// #include <frc/ADIS16470_IMU.h>
 #include <frc/filter/SlewRateLimiter.h>
 #include <frc/geometry/Pose2d.h>
 #include <frc/geometry/Rotation2d.h>
@@ -63,7 +64,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
    *
    * @return the robot's heading in degrees, from 180 to 180
    */
-  units::degree_t GetHeading() const;
+  units::degree_t GetHeading();
 
   /**
    * Zeroes the heading of the robot.
@@ -111,7 +112,9 @@ class DriveSubsystem : public frc2::SubsystemBase {
   MAXSwerveModule m_rearRight;
 
   // The gyro sensor
-  frc::ADIS16470_IMU m_gyro;
+  // frc::ADIS16470_IMU m_gyro;
+  AHRS ahrs{frc::I2C::Port::kMXP};
+  double getNavXHeading();
 
   // Slew rate filter variables for controlling lateral acceleration
   double m_currentRotation = 0.0;
