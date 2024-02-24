@@ -20,6 +20,8 @@
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
+#include "subsystems/IntakeSubsystem.h"
+
 
 using namespace DriveConstants;
 
@@ -47,9 +49,31 @@ RobotContainer::RobotContainer() {
 }
 
 void RobotContainer::ConfigureButtonBindings() {
-  frc2::JoystickButton(&m_driverController,
+    //set wheels to the X configuration
+    frc2::JoystickButton(&m_driverController,
                        frc::XboxController::Button::kRightBumper)
-      .WhileTrue(new frc2::RunCommand([this] { m_drive.SetX(); }, {&m_drive}));
+        .WhileTrue(new frc2::RunCommand([this] { m_drive.SetX(); }, {&m_drive}));
+    //Rev up shooter
+    frc2::JoystickButton(&m_driverController,
+                        frc::XboxController::Button::kLeftBumper)
+       .WhileFalse(new frc2::RunCommand([this] { m_ShootySubsystem.SetMotorSpeed(0);})).WhileTrue(new frc2::RunCommand([this] {m_ShootySubsystem.SetMotorSpeed(2000);}));
+    //Set servos to firing position
+    frc2::JoystickButton(&m_driverController,
+                        frc::XboxController::Button::kB)
+       .OnTrue(new frc2::RunCommand([this] { m_ShootySubsystem.fire(true);})).OnFalse(new frc2::RunCommand([this] {m_ShootySubsystem.fire(false);}));
+    //Spin intake
+    frc2::JoystickButton(&m_driverController,
+                        frc::XboxController::Button::kA)
+       .WhileFalse(new frc2::RunCommand([this] { m_IntakeSubsystem.SetIntakeMotorSpeed(0);})).WhileTrue(new frc2::RunCommand([this] {m_IntakeSubsystem.SetIntakeMotorSpeed(0.3);}));
+    //Retract climber piston
+    frc2::JoystickButton(&m_driverController,
+                        frc::XboxController::Button::kX)
+        .OnTrue(new frc2::RunCommand([this] { m_ClimberSubsystem.retractPiston();}));
+    //Extend climber piston
+    frc2::JoystickButton(&m_driverController,
+                        frc::XboxController::Button::kY)
+        .OnTrue(new frc2::RunCommand([this] { m_ClimberSubsystem.extendPiston();}));
+
 }
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {
