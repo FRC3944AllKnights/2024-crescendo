@@ -18,6 +18,7 @@
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/ShootySubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
+#include "subsystems/ClimberSubsystem.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -46,7 +47,7 @@ class RobotContainer {
 
   ShootySubsystem m_ShootySubsystem;
   IntakeSubsystem m_IntakeSubsystem;
-
+  ClimberSubsystem m_ClimberSubsystem;
 
   void ConfigureButtonBindings();
 };

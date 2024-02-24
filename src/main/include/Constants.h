@@ -47,15 +47,15 @@ constexpr double kRearLeftChassisAngularOffset = std::numbers::pi;
 constexpr double kRearRightChassisAngularOffset = std::numbers::pi / 2;
 
 // SPARK MAX CAN IDs
-constexpr int kFrontLeftDrivingCanId = 11;
-constexpr int kRearLeftDrivingCanId = 13;
-constexpr int kFrontRightDrivingCanId = 15;
-constexpr int kRearRightDrivingCanId = 17;
+constexpr int kFrontLeftDrivingCanId = 1;
+constexpr int kRearLeftDrivingCanId = 2;
+constexpr int kFrontRightDrivingCanId = 3;
+constexpr int kRearRightDrivingCanId = 4;
 
-constexpr int kFrontLeftTurningCanId = 10;
-constexpr int kRearLeftTurningCanId = 12;
-constexpr int kFrontRightTurningCanId = 14;
-constexpr int kRearRightTurningCanId = 16;
+constexpr int kFrontLeftTurningCanId = 5;
+constexpr int kRearLeftTurningCanId = 6;
+constexpr int kFrontRightTurningCanId = 7;
+constexpr int kRearRightTurningCanId = 8;
 }  // namespace DriveConstants
 
 namespace ModuleConstants {
@@ -139,3 +139,20 @@ namespace OIConstants {
 constexpr int kDriverControllerPort = 0;
 constexpr double kDriveDeadband = 0.05;
 }  // namespace OIConstants
+
+namespace ClimberConstants {
+    constexpr int pneumaticHubCANID = 10;
+    constexpr int climberExtendChannel = 0;
+    constexpr int climberRetractChannel = 15;
+}
+
+namespace ShooterConstants {
+    constexpr int shooterTopCANID = 11;
+    constexpr int shooterBottonCANID = 12;
+    constexpr int leftServoChannel = 1;
+    constexpr int rightServoChannel = 2;
+    constexpr double leftServoInitPosition = 0.5;
+    constexpr double rightServoInitPosition = 0.5;
+    constexpr double leftServoFirePosition = 0.6;
+    constexpr double rightServoFirePosition = 0.4;
+}

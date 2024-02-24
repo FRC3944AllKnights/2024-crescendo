@@ -1,15 +1,10 @@
 #include "subsystems/ShootySubsystem.h"
-
-#include "subsystems/MAXSwerveModule.h"
-
 #include "Constants.h"
 
 
 
 ShootySubsystem::ShootySubsystem() {
     // Additional initialization if needed
-    
-
     m_ShootyMotorTop.RestoreFactoryDefaults();
     m_ShootyMotorBottom.RestoreFactoryDefaults();
 
@@ -27,9 +22,26 @@ ShootySubsystem::ShootySubsystem() {
 }
 
 void ShootySubsystem::SetMotorSpeed(double speed) {
-   
-    m_ShootyPIDControllerTop.SetReference(speed, rev::ControlType::kVelocity);
-    m_ShootyPIDControllerBottom.SetReference(speed, rev::ControlType::kVelocity);
-    
+    if (speed > 0.0)
+    {
+        m_ShootyPIDControllerTop.SetReference(speed, rev::ControlType::kVelocity);
+        m_ShootyPIDControllerBottom.SetReference(speed, rev::ControlType::kVelocity);
+    }
+    else { //hopefully prevent weird stuff at low speed
+        m_ShootyMotorTop.Set(0);
+        m_ShootyMotorBottom.Set(0);
+    }
+}
 
+void ShootySubsystem::fire(bool fire) {
+    if(fire)
+    {
+        leftServo.Set(leftServoFirePosition);
+        rightServo.Set(rightServoFirePosition);
+    }
+    else
+    {
+        leftServo.Set(leftServoInitPosition);
+        rightServo.Set(rightServoInitPosition);
+    }
 }

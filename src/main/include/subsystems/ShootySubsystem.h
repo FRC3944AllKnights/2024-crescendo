@@ -5,13 +5,16 @@
 #include <rev/SparkAbsoluteEncoder.h>
 #include <rev/SparkPIDController.h>
 #include <rev/SparkRelativeEncoder.h>
+#include <frc/Servo.h>
+#include "Constants.h"
+
+using namespace ShooterConstants;
 
 class ShootySubsystem : public frc2::SubsystemBase {
 public:
     ShootySubsystem();
     void SetMotorSpeed(double speed);
-
-    
+    void fire(bool fire);
 
 private:
     rev::CANSparkMax m_ShootyMotorTop{11, rev::CANSparkMax::MotorType::kBrushless};  // Replace '1' with the CAN ID of the Spark MAX
@@ -27,5 +30,6 @@ private:
     rev::SparkPIDController m_ShootyPIDControllerBottom =
         m_ShootyMotorBottom.GetPIDController();
 
-
+    frc::Servo leftServo {leftServoChannel};
+    frc::Servo rightServo {rightServoChannel};
 };
