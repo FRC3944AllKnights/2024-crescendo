@@ -12,6 +12,8 @@
 #include "Constants.h"
 #include "utils/SwerveUtils.h"
 
+#include <frc/SmartDashboard/SmartDashboard.h>
+
 using namespace DriveConstants;
 
 DriveSubsystem::DriveSubsystem()
@@ -44,6 +46,9 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
                            bool rateLimit) {
   double xSpeedCommanded;
   double ySpeedCommanded;
+  
+  frc::SmartDashboard::PutNumber("gyro heading",getNavXHeading());
+  frc::SmartDashboard::PutNumber("gyro rate", -ahrs.GetRate());
 
   if (rateLimit) {
     // Convert XY to polar for rate limiting
