@@ -24,8 +24,9 @@ ShootySubsystem::ShootySubsystem() {
 void ShootySubsystem::SetMotorSpeed(double speed) {
     if (speed > 0.0)
     {
-        m_ShootyPIDControllerTop.SetReference(speed, rev::ControlType::kVelocity);
-        m_ShootyPIDControllerBottom.SetReference(speed, rev::ControlType::kVelocity);
+        m_ShootyPIDControllerTop.SetReference(-speed, rev::ControlType::kVelocity);
+        //m_ShootyPIDControllerBottom.SetReference(-speed, rev::ControlType::kVelocity);
+        m_ShootyMotorBottom.Set(-speed/5800);
     }
     else { //hopefully prevent weird stuff at low speed
         m_ShootyMotorTop.Set(0);

@@ -6,9 +6,11 @@ ClimberSubsystem::ClimberSubsystem() {
 }
 
 void ClimberSubsystem::extendPiston() {    
+     m_doubleSolenoid.Set(frc::DoubleSolenoid::kOff);
      m_doubleSolenoid.Set(frc::DoubleSolenoid::kForward);
 }
 
 void ClimberSubsystem::retractPiston() {    
+     m_doubleSolenoid.Set(frc::DoubleSolenoid::kOff);
      m_doubleSolenoid.Set(frc::DoubleSolenoid::kReverse);
 }
