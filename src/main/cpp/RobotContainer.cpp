@@ -43,7 +43,7 @@ RobotContainer::RobotContainer() {
                 m_driverController.GetLeftX()*0.3, OIConstants::kDriveDeadband)},
             -units::radians_per_second_t{frc::ApplyDeadband(
                 m_driverController.GetRightX()*0.6, OIConstants::kDriveDeadband)},
-            false, true);
+            true, true);
       },
       {&m_drive}));
 }
