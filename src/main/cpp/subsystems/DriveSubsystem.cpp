@@ -32,6 +32,9 @@ DriveSubsystem::DriveSubsystem()
                   m_rearLeft.GetPosition(), m_rearRight.GetPosition()},
                  frc::Pose2d{}} {}
 
+frc2::CommandPtr DriveSubsystem::setSlowFactor(double slow){
+  return frc2::cmd::RunOnce([this, slow] { this->slowFactor = slow; }, {this});
+}
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
   m_odometry.Update(frc::Rotation2d(units::radian_t{

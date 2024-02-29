@@ -13,6 +13,7 @@
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
 #include <frc2/command/SubsystemBase.h>
+#include <frc2/command/Commands.h>
 
 #include "Constants.h"
 #include "MAXSwerveModule.h"
@@ -48,6 +49,9 @@ class DriveSubsystem : public frc2::SubsystemBase {
    * Sets the wheels into an X formation to prevent movement.
    */
   void SetX();
+
+  //sets slow factor for the drivebase
+  frc2::CommandPtr setSlowFactor(double slow);
 
   /**
    * Resets the drive encoders to currently read a position of 0.
@@ -101,7 +105,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
                          DriveConstants::kTrackWidth / 2},
       frc::Translation2d{-DriveConstants::kWheelBase / 2,
                          -DriveConstants::kTrackWidth / 2}};
-
+    double slowFactor = 0.5;
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
