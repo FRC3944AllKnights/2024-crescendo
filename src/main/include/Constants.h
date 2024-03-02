@@ -151,8 +151,12 @@ namespace ShooterConstants {
     constexpr int shooterBottonCANID = 12;
     constexpr int leftServoChannel = 1;
     constexpr int rightServoChannel = 2;
-    constexpr double leftServoInitPosition = 0.2;
-    constexpr double rightServoInitPosition = 0.8;
-    constexpr double leftServoFirePosition = 0.7;
-    constexpr double rightServoFirePosition = 0.3;
+    constexpr double leftServoInitPosition = 0.99;
+    constexpr double rightServoInitPosition = 0.1;
+    constexpr double leftServoFirePosition = 0.3;
+    constexpr double rightServoFirePosition = 0.7;
+    constexpr double ampTopShooterSpeed = 700;
+    constexpr double ampBottomShooterSpeed = 800;
+    constexpr double speakerTopShooterSpeed = 1800;
+    constexpr double speakerBottomShooterSpeed = 1800;
 }

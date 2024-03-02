@@ -8,6 +8,9 @@ ShootySubsystem::ShootySubsystem() {
     m_ShootyMotorTop.RestoreFactoryDefaults();
     m_ShootyMotorBottom.RestoreFactoryDefaults();
 
+    m_ShootyMotorTop.SetIdleMode(rev::CANSparkBase::IdleMode::kCoast);
+    m_ShootyMotorBottom.SetIdleMode(rev::CANSparkBase::IdleMode::kCoast);
+
     m_ShootyPIDControllerTop.SetP(1.5e-5);
     m_ShootyPIDControllerTop.SetI(3.3e-7);
     m_ShootyPIDControllerTop.SetD(0);
@@ -20,8 +23,14 @@ ShootySubsystem::ShootySubsystem() {
     m_ShootyPIDControllerBottom.SetFF(0.000015);
     m_ShootyPIDControllerBottom.SetOutputRange(-1, 1);
 
+    leftServo.Set(leftServoInitPosition);
+    rightServo.Set(rightServoInitPosition);
+
     frc::SmartDashboard::PutNumber("Set Top Shooter RPM", top_shooter_speed_);
     frc::SmartDashboard::PutNumber("Set Bottom Shooter RPM", bottom_shooter_speed_);
+
+    frc::SmartDashboard::PutNumber("Set Left Servo Position", left_servo_);
+    frc::SmartDashboard::PutNumber("Set Right Servo Position", right_servo_);
 }
 
 void ShootySubsystem::SetMotorSpeed(double speed) {
@@ -37,7 +46,7 @@ void ShootySubsystem::SetMotorSpeed(double speed) {
 }
 
 void ShootySubsystem::fire(bool fire) {
-    if(fire && abs(m_ShootyEncoderTop.GetVelocity()) > top_shooter_speed_ && abs(m_ShootyEncoderBottom.GetVelocity()) > bottom_shooter_speed_)
+    if(fire) //&& abs(m_ShootyEncoderTop.GetVelocity()) > top_shooter_speed_ && abs(m_ShootyEncoderBottom.GetVelocity()) > bottom_shooter_speed_)
     {
         leftServo.Set(leftServoFirePosition);
         rightServo.Set(rightServoFirePosition);
@@ -52,4 +61,9 @@ void ShootySubsystem::fire(bool fire) {
 void ShootySubsystem::smartDashboardParams() {
     top_shooter_speed_ = frc::SmartDashboard::GetNumber("Set Top Shooter RPM", 500.0);
     bottom_shooter_speed_ = frc::SmartDashboard::GetNumber("Set Bottom Shooter RPM", 500.0);
+    left_servo_ = frc::SmartDashboard::GetNumber("Set Left Servo Position", 0.5);
+    right_servo_ = frc::SmartDashboard::GetNumber("Set Right Servo Position", 0.5);
+
+    //frc::SmartDashboard::PutNumber("Set Left Servo Position", left_servo_);
+    //frc::SmartDashboard::PutNumber("Set Right Servo Position", right_servo_);
 }

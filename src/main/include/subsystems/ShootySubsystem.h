@@ -36,4 +36,7 @@ private:
 
     double top_shooter_speed_ = 500;
     double bottom_shooter_speed_ = 500;
+
+    double left_servo_ = 0.6;
+    double right_servo_ = 0.6;
 };
