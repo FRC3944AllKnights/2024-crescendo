@@ -15,6 +15,7 @@ public:
     ShootySubsystem();
     void SetMotorSpeed(double speed);
     void fire(bool fire);
+    void smartDashboardParams();
 
 private:
     rev::CANSparkMax m_ShootyMotorTop{11, rev::CANSparkMax::MotorType::kBrushless};  // Replace '1' with the CAN ID of the Spark MAX
@@ -32,4 +33,7 @@ private:
 
     frc::Servo leftServo {leftServoChannel};
     frc::Servo rightServo {rightServoChannel};
+
+    double top_shooter_speed_ = 500;
+    double bottom_shooter_speed_ = 500;
 };

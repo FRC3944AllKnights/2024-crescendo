@@ -46,6 +46,12 @@ RobotContainer::RobotContainer() {
             true, true);
       },
       {&m_drive}));
+
+    m_ShootySubsystem.SetDefaultCommand(frc2::RunCommand(
+        [this] {
+            m_ShootySubsystem.smartDashboardParams();
+        },
+        {&m_ShootySubsystem}));
 }
 
 void RobotContainer::ConfigureButtonBindings() {
