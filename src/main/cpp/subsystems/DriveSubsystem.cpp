@@ -12,6 +12,8 @@
 #include "Constants.h"
 #include "utils/SwerveUtils.h"
 
+#include <frc/SmartDashboard/SmartDashboard.h>
+
 using namespace DriveConstants;
 
 DriveSubsystem::DriveSubsystem()
@@ -30,6 +32,10 @@ DriveSubsystem::DriveSubsystem()
                   m_rearLeft.GetPosition(), m_rearRight.GetPosition()},
                  frc::Pose2d{}} {}
 
+frc2::CommandPtr DriveSubsystem::setSlowFactor(double slow){
+  return frc2::cmd::RunOnce([this, slow] { this->slowFactor = slow; }, {this});
+}
+
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
   m_odometry.Update(frc::Rotation2d(units::radian_t{
@@ -44,6 +50,9 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
                            bool rateLimit) {
   double xSpeedCommanded;
   double ySpeedCommanded;
+  
+  frc::SmartDashboard::PutNumber("gyro heading",getNavXHeading());
+  frc::SmartDashboard::PutNumber("gyro rate", -ahrs.GetRate());
 
   if (rateLimit) {
     // Convert XY to polar for rate limiting
@@ -113,7 +122,7 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
           ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(
                 xSpeedDelivered, ySpeedDelivered, rotDelivered,
                 frc::Rotation2d(units::radian_t{
-                    getNavXHeading()}))
+                    GetHeading()}))
           : frc::ChassisSpeeds{xSpeedDelivered, ySpeedDelivered, rotDelivered});
 
   kDriveKinematics.DesaturateWheelSpeeds(&states, DriveConstants::kMaxSpeed);
