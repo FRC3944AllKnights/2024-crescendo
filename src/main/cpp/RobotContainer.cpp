@@ -107,11 +107,11 @@ void RobotContainer::ConfigureButtonBindings() {
 
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kX)
-        .ToggleOnTrue(new frc2::RunCommand([this] { m_ClimberSubsystem.retractPiston();}));
+        .OnTrue(new frc2::InstantCommand([this] { m_ClimberSubsystem.retractPiston();}));
     //Extend climber piston
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kY)
-        .ToggleOnTrue(new frc2::RunCommand([this] { m_ClimberSubsystem.extendPiston();}));
+        .OnTrue(new frc2::InstantCommand([this] { m_ClimberSubsystem.extendPiston();}));
 
 }
 
