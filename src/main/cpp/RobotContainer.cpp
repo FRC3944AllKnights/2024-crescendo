@@ -46,26 +46,65 @@ RobotContainer::RobotContainer() {
             true, true);
       },
       {&m_drive}));
+
+    m_ShootySubsystem.SetDefaultCommand(frc2::RunCommand(
+        [this] {
+            m_ShootySubsystem.smartDashboardParams();
+        },
+        {&m_ShootySubsystem}));
 }
 
 void RobotContainer::ConfigureButtonBindings() {
     //set wheels to the X configuration
+    /*
     frc2::JoystickButton(&m_driverController,
                        frc::XboxController::Button::kRightBumper)
         .WhileTrue(new frc2::RunCommand([this] { m_drive.SetX(); }, {&m_drive}));
+        */
     //Rev up shooter
-    frc2::JoystickButton(&m_driverController,
-                        frc::XboxController::Button::kLeftBumper)
-       .WhileFalse(new frc2::RunCommand([this] { m_ShootySubsystem.SetMotorSpeed(0.0);})).WhileTrue(new frc2::RunCommand([this] {m_ShootySubsystem.SetMotorSpeed(2000);}));
-    //Set servos to firing position
-    frc2::JoystickButton(&m_driverController,
-                        frc::XboxController::Button::kB)
-       .WhileTrue(new frc2::RunCommand([this] { m_ShootySubsystem.fire(true);})).WhileFalse(new frc2::RunCommand([this] {m_ShootySubsystem.fire(false);}));
-    //Spin intake
+    
+    //spin intake
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kA)
        .WhileFalse(new frc2::RunCommand([this] { m_IntakeSubsystem.SetIntakeMotorSpeed(0);})).WhileTrue(new frc2::RunCommand([this] {m_IntakeSubsystem.SetIntakeMotorSpeed(-.6);}));
     //Retract climber piston
+
+    frc2::JoystickButton(&m_driverController,
+                         frc::XboxController::Button::kLeftBumper)
+        .OnFalse(new frc2::InstantCommand([this] 
+        { 
+            m_ShootySubsystem.SetMotorSpeed(0.0, 0.0);
+            m_ShootySubsystem.fire(false);
+        })).WhileTrue(new frc2::RunCommand([this] 
+        {
+            if(m_ShootySubsystem.SetMotorSpeed(ampTopShooterSpeed, ampBottomShooterSpeed)){
+
+                m_ShootySubsystem.fire(true);
+            }
+            else
+            {
+                m_ShootySubsystem.fire(false);
+            }
+        }));
+
+    frc2::JoystickButton(&m_driverController,
+                         frc::XboxController::Button::kRightBumper)
+        .OnFalse(new frc2::InstantCommand([this]
+        { 
+            m_ShootySubsystem.SetMotorSpeed(0.0, 0.0);
+            m_ShootySubsystem.fire(false);
+        })).WhileTrue(new frc2::RunCommand([this] 
+        {
+            if(m_ShootySubsystem.SetMotorSpeed(speakerTopShooterSpeed, speakerBottomShooterSpeed)){
+
+                m_ShootySubsystem.fire(true);
+            }
+            else
+            {
+                m_ShootySubsystem.fire(false);
+            }
+        }));
+
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kX)
         .ToggleOnTrue(new frc2::RunCommand([this] { m_ClimberSubsystem.retractPiston();}));
