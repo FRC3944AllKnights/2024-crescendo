@@ -13,7 +13,7 @@ using namespace ShooterConstants;
 class ShootySubsystem : public frc2::SubsystemBase {
 public:
     ShootySubsystem();
-    void SetMotorSpeed(double speed);
+    bool SetMotorSpeed(double topspeed, double botspeed);
     void fire(bool fire);
     void smartDashboardParams();
 

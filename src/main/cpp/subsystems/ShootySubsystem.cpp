@@ -11,6 +11,9 @@ ShootySubsystem::ShootySubsystem() {
     m_ShootyMotorTop.SetIdleMode(rev::CANSparkBase::IdleMode::kCoast);
     m_ShootyMotorBottom.SetIdleMode(rev::CANSparkBase::IdleMode::kCoast);
 
+    m_ShootyMotorTop.SetInverted(true);
+    m_ShootyMotorBottom.SetInverted(true);
+
     m_ShootyPIDControllerTop.SetP(1.5e-5);
     m_ShootyPIDControllerTop.SetI(3.3e-7);
     m_ShootyPIDControllerTop.SetD(0);
@@ -33,15 +36,21 @@ ShootySubsystem::ShootySubsystem() {
     frc::SmartDashboard::PutNumber("Set Right Servo Position", right_servo_);
 }
 
-void ShootySubsystem::SetMotorSpeed(double speed) {
-    if (speed > 0.0)
+bool ShootySubsystem::SetMotorSpeed(double topspeed, double botspeed) {
+    if (topspeed > 0.0 and botspeed > 0.0)
     {
-        m_ShootyPIDControllerTop.SetReference(-top_shooter_speed_, rev::ControlType::kVelocity);
-        m_ShootyPIDControllerBottom.SetReference(-bottom_shooter_speed_, rev::ControlType::kVelocity);
+        m_ShootyPIDControllerTop.SetReference(topspeed, rev::ControlType::kVelocity);
+        m_ShootyPIDControllerBottom.SetReference(botspeed, rev::ControlType::kVelocity);
     }
     else { //hopefully prevent weird stuff at low speed
         m_ShootyMotorTop.Set(0);
         m_ShootyMotorBottom.Set(0);
+    }
+    if(topspeed <= m_ShootyEncoderTop.GetVelocity() and botspeed <= m_ShootyEncoderBottom.GetVelocity()){
+        return true;
+    }
+    else{
+        return false;
     }
 }
 
