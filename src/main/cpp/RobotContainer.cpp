@@ -36,13 +36,15 @@ RobotContainer::RobotContainer() {
   // Turning is controlled by the X axis of the right stick.
   m_drive.SetDefaultCommand(frc2::RunCommand(
       [this] {
+        //set default values based on joysticks
+        double y = m_driverController.GetLeftY()*0.3;
+        double x = m_driverController.GetLeftX()*0.3;
+        double theta = m_driverController.GetRightX()*0.3;
+
         m_drive.Drive(
-            -units::meters_per_second_t{frc::ApplyDeadband(
-                m_driverController.GetLeftY()*0.3, OIConstants::kDriveDeadband)},
-            -units::meters_per_second_t{frc::ApplyDeadband(
-                m_driverController.GetLeftX()*0.3, OIConstants::kDriveDeadband)},
-            -units::radians_per_second_t{frc::ApplyDeadband(
-                m_driverController.GetRightX()*0.6, OIConstants::kDriveDeadband)},
+            -units::meters_per_second_t{frc::ApplyDeadband(y, OIConstants::kDriveDeadband)},
+            -units::meters_per_second_t{frc::ApplyDeadband(x, OIConstants::kDriveDeadband)},
+            -units::radians_per_second_t{frc::ApplyDeadband(theta, OIConstants::kDriveDeadband)},
             true, true);
       },
       {&m_drive}));
