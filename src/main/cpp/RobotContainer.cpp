@@ -46,9 +46,16 @@ RobotContainer::RobotContainer() {
   m_drive.SetDefaultCommand(frc2::RunCommand(
       [this] {
         //set default values based on joysticks
-        double y = -m_driverController.GetLeftY()*0.3;
-        double x = -m_driverController.GetLeftX()*0.3;
-        double theta = -m_driverController.GetRightX()*0.3;
+        double y = -frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband)*0.3;
+        double x = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband)*0.3;
+        double theta = 0;
+        //calculate new theta speed based on the joystick direction
+        double rotation = atan2(m_driverController.GetRightY(), m_driverController.GetRightX())*180/std::numbers::pi + 180;
+        if(abs(m_driverController.GetRightY()) > OIConstants::kDriveDeadband and abs(m_driverController.GetRightX() > OIConstants::kDriveDeadband)) {
+            rotationPID.EnableContinuousInput(0,360);
+            double theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), rotation);
+        }
+
 
         //set pid to 90 as a test
         if(shootingInAmp)
@@ -64,9 +71,9 @@ RobotContainer::RobotContainer() {
         }
 
         m_drive.Drive(
-            units::meters_per_second_t{frc::ApplyDeadband(y, OIConstants::kDriveDeadband)},
-            units::meters_per_second_t{frc::ApplyDeadband(x, OIConstants::kDriveDeadband)},
-            units::radians_per_second_t{frc::ApplyDeadband(theta, OIConstants::kDriveDeadband)},
+            units::meters_per_second_t{y},
+            units::meters_per_second_t{x},
+            units::radians_per_second_t{theta},
             true, true);
       },
       {&m_drive}));
