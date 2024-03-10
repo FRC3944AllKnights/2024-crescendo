@@ -6,7 +6,7 @@
 
 #include <frc/controller/PIDController.h>
 #include <frc/geometry/Translation2d.h>
-#include <frc/shuffleboard/Shuffleboard.h>
+#include <frc/SmartDashboard/SmartDashboard.h>
 #include <frc/trajectory/Trajectory.h>
 #include <frc/trajectory/TrajectoryGenerator.h>
 #include <frc2/command/InstantCommand.h>
@@ -32,6 +32,14 @@ RobotContainer::RobotContainer() {
   // Configure the button bindings
   ConfigureButtonBindings();
 
+  shooting = false; //default to not shooting
+  isRed = true; //default to red alliance
+  if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kBlue)
+  {
+    isRed = false;
+  }
+
+
   // Set up default drive command
   // The left stick controls translation of the robot.
   // Turning is controlled by the X axis of the right stick.
@@ -50,11 +58,15 @@ RobotContainer::RobotContainer() {
       },
       {&m_drive}));
 
+    //using the shooty subsystem default command to use for generic smartdashboard stuff
     m_ShootySubsystem.SetDefaultCommand(frc2::RunCommand(
         [this] {
             m_ShootySubsystem.smartDashboardParams();
+            frc::SmartDashboard::PutNumber("Apriltag ID",LimelightHelpers::getFiducialID(""));
+            frc::SmartDashboard::PutNumber("Apriltag TX",LimelightHelpers::getTX(""));
         },
         {&m_ShootySubsystem}));
+
 }
 
 void RobotContainer::ConfigureButtonBindings() {
@@ -64,22 +76,32 @@ void RobotContainer::ConfigureButtonBindings() {
                        frc::XboxController::Button::kRightBumper)
         .WhileTrue(new frc2::RunCommand([this] { m_drive.SetX(); }, {&m_drive}));
         */
-    //Rev up shooter
     
     //spin intake
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kA)
        .WhileFalse(new frc2::RunCommand([this] { m_IntakeSubsystem.SetIntakeMotorSpeed(0);})).WhileTrue(new frc2::RunCommand([this] {m_IntakeSubsystem.SetIntakeMotorSpeed(-.6);}));
-    //Retract climber piston
-
+    //fire note into amp
     frc2::JoystickButton(&m_driverController,
                          frc::XboxController::Button::kLeftBumper)
         .OnFalse(new frc2::InstantCommand([this] 
         { 
+            shooting = false;
             m_ShootySubsystem.SetMotorSpeed(0.0, 0.0);
             m_ShootySubsystem.fire(false);
         })).WhileTrue(new frc2::RunCommand([this] 
         {
+            if(!shooting){ //set tag to the correct ID
+                if(isRed){
+                    currentTag = 5;
+                    
+                }
+                else{
+                    currentTag = 6;
+                }
+                LimelightHelpers::setPriorityTagID("", currentTag);
+                shooting = true;
+            }
             if(m_ShootySubsystem.SetMotorSpeed(ampTopShooterSpeed, ampBottomShooterSpeed)){
 
                 m_ShootySubsystem.fire(true);
@@ -89,15 +111,27 @@ void RobotContainer::ConfigureButtonBindings() {
                 m_ShootySubsystem.fire(false);
             }
         }));
-
+    //Fire note into speaker
     frc2::JoystickButton(&m_driverController,
                          frc::XboxController::Button::kRightBumper)
         .OnFalse(new frc2::InstantCommand([this]
         { 
+            shooting = false;
             m_ShootySubsystem.SetMotorSpeed(0.0, 0.0);
             m_ShootySubsystem.fire(false);
         })).WhileTrue(new frc2::RunCommand([this] 
         {
+            if(!shooting){ //set tag to the correct ID
+                if(isRed){
+                    currentTag = 4;
+                    
+                }
+                else{
+                    currentTag = 7;
+                }
+                LimelightHelpers::setPriorityTagID("", currentTag);
+                shooting = true;
+            }
             if(m_ShootySubsystem.SetMotorSpeed(speakerTopShooterSpeed, speakerBottomShooterSpeed)){
 
                 m_ShootySubsystem.fire(true);
@@ -107,7 +141,7 @@ void RobotContainer::ConfigureButtonBindings() {
                 m_ShootySubsystem.fire(false);
             }
         }));
-
+    //Retract climber piston
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kX)
         .OnTrue(new frc2::InstantCommand([this] { m_ClimberSubsystem.retractPiston();}));
