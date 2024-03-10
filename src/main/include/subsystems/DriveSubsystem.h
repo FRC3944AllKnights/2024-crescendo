@@ -71,6 +71,13 @@ class DriveSubsystem : public frc2::SubsystemBase {
   units::degree_t GetHeading();
 
   /**
+   * Returns the heading of the robot normalized around a circle.
+   *
+   * @return the robot's heading in degrees, from 0 to 360
+   */
+  double GetNormalizedHeading();
+
+  /**
    * Zeroes the heading of the robot.
    */
   void ZeroHeading();

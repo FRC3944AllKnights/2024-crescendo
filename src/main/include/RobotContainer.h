@@ -39,7 +39,8 @@ class RobotContainer {
   frc::XboxController m_driverController{OIConstants::kDriverControllerPort};
 
   bool isRed;
-  bool shooting;
+  bool shootingInAmp;
+  bool shootingInSpeaker;
   int currentTag;
 
   // The robot's subsystems and commands are defined here...

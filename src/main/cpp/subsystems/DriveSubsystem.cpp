@@ -51,7 +51,7 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
   double xSpeedCommanded;
   double ySpeedCommanded;
   
-  frc::SmartDashboard::PutNumber("gyro heading",getNavXHeading());
+  frc::SmartDashboard::PutNumber("gyro heading",GetNormalizedHeading());
   frc::SmartDashboard::PutNumber("gyro rate", -ahrs.GetRate());
 
   if (rateLimit) {
@@ -169,7 +169,18 @@ double DriveSubsystem::getNavXHeading(){
 }
 
 units::degree_t DriveSubsystem::GetHeading(){
-  return units::degree_t{getNavXHeading()};
+  return frc::Rotation2d(
+             units::degree_t{getNavXHeading()}).Degrees();
+}
+
+double DriveSubsystem::GetNormalizedHeading()
+{
+  double x = std::fmod(GetHeading().value(),360.0);
+  if(x < 0)
+  {
+    x = x + 360;
+  }
+  return x;
 }
 
 void DriveSubsystem::ZeroHeading() { ahrs.Reset(); }

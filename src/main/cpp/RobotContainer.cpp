@@ -32,13 +32,13 @@ RobotContainer::RobotContainer() {
   // Configure the button bindings
   ConfigureButtonBindings();
 
-  shooting = false; //default to not shooting
+  shootingInAmp = false; //default to not shooting
+  shootingInSpeaker = false;
   isRed = true; //default to red alliance
   if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kBlue)
   {
     isRed = false;
   }
-
 
   // Set up default drive command
   // The left stick controls translation of the robot.
@@ -46,14 +46,27 @@ RobotContainer::RobotContainer() {
   m_drive.SetDefaultCommand(frc2::RunCommand(
       [this] {
         //set default values based on joysticks
-        double y = m_driverController.GetLeftY()*0.3;
-        double x = m_driverController.GetLeftX()*0.3;
-        double theta = m_driverController.GetRightX()*0.3;
+        double y = -m_driverController.GetLeftY()*0.3;
+        double x = -m_driverController.GetLeftX()*0.3;
+        double theta = -m_driverController.GetRightX()*0.3;
+
+        //set pid to 90 as a test
+        if(shootingInAmp)
+        {
+            if(isRed){
+                rotationPID.EnableContinuousInput(0,360);
+                theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 90.0);
+            }
+            else{
+                rotationPID.EnableContinuousInput(0,360);
+                theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 270.0);
+            }
+        }
 
         m_drive.Drive(
-            -units::meters_per_second_t{frc::ApplyDeadband(y, OIConstants::kDriveDeadband)},
-            -units::meters_per_second_t{frc::ApplyDeadband(x, OIConstants::kDriveDeadband)},
-            -units::radians_per_second_t{frc::ApplyDeadband(theta, OIConstants::kDriveDeadband)},
+            units::meters_per_second_t{frc::ApplyDeadband(y, OIConstants::kDriveDeadband)},
+            units::meters_per_second_t{frc::ApplyDeadband(x, OIConstants::kDriveDeadband)},
+            units::radians_per_second_t{frc::ApplyDeadband(theta, OIConstants::kDriveDeadband)},
             true, true);
       },
       {&m_drive}));
@@ -86,12 +99,12 @@ void RobotContainer::ConfigureButtonBindings() {
                          frc::XboxController::Button::kLeftBumper)
         .OnFalse(new frc2::InstantCommand([this] 
         { 
-            shooting = false;
+            shootingInAmp = false;
             m_ShootySubsystem.SetMotorSpeed(0.0, 0.0);
             m_ShootySubsystem.fire(false);
         })).WhileTrue(new frc2::RunCommand([this] 
         {
-            if(!shooting){ //set tag to the correct ID
+            if(!shootingInAmp){ //set tag to the correct ID
                 if(isRed){
                     currentTag = 5;
                     
@@ -100,7 +113,7 @@ void RobotContainer::ConfigureButtonBindings() {
                     currentTag = 6;
                 }
                 LimelightHelpers::setPriorityTagID("", currentTag);
-                shooting = true;
+                shootingInAmp = true;
             }
             if(m_ShootySubsystem.SetMotorSpeed(ampTopShooterSpeed, ampBottomShooterSpeed)){
 
@@ -116,12 +129,12 @@ void RobotContainer::ConfigureButtonBindings() {
                          frc::XboxController::Button::kRightBumper)
         .OnFalse(new frc2::InstantCommand([this]
         { 
-            shooting = false;
+            shootingInSpeaker = false;
             m_ShootySubsystem.SetMotorSpeed(0.0, 0.0);
             m_ShootySubsystem.fire(false);
         })).WhileTrue(new frc2::RunCommand([this] 
         {
-            if(!shooting){ //set tag to the correct ID
+            if(!shootingInSpeaker){ //set tag to the correct ID
                 if(isRed){
                     currentTag = 4;
                     
@@ -130,7 +143,7 @@ void RobotContainer::ConfigureButtonBindings() {
                     currentTag = 7;
                 }
                 LimelightHelpers::setPriorityTagID("", currentTag);
-                shooting = true;
+                shootingInSpeaker = true;
             }
             if(m_ShootySubsystem.SetMotorSpeed(speakerTopShooterSpeed, speakerBottomShooterSpeed)){
 
