@@ -53,7 +53,7 @@ RobotContainer::RobotContainer() {
         double rotation = atan2(m_driverController.GetRightY(), m_driverController.GetRightX())*180/std::numbers::pi + 180;
         if(abs(m_driverController.GetRightY()) > OIConstants::kDriveDeadband and abs(m_driverController.GetRightX() > OIConstants::kDriveDeadband)) {
             rotationPID.EnableContinuousInput(0,360);
-            double theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), rotation);
+            theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), rotation);
         }
 
 
@@ -69,12 +69,8 @@ RobotContainer::RobotContainer() {
                 theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 270.0);
             }
         }
-
-        m_drive.Drive(
-            units::meters_per_second_t{y},
-            units::meters_per_second_t{x},
-            units::radians_per_second_t{theta},
-            true, true);
+        //send speeds to the drive command
+        m_drive.Drive(units::meters_per_second_t{y}, units::meters_per_second_t{x}, units::radians_per_second_t{theta}, true, true);
       },
       {&m_drive}));
 
