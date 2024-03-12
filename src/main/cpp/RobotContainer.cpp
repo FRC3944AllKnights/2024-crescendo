@@ -46,16 +46,19 @@ RobotContainer::RobotContainer() {
   m_drive.SetDefaultCommand(frc2::RunCommand(
       [this] {
         //set default values based on joysticks
-        double y = -m_driverController.GetLeftY()*0.3;
-        double x = -m_driverController.GetLeftX()*0.3;
-        double theta = -m_driverController.GetRightX()*0.3;
+        double y = -frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband)*0.3;
+        double x = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband)*0.3;
+        double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband)*0.3;
 
         //set pid to 90 as a test
         if(shootingInAmp)
         {
+            y = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
+            x = translationPID.Calculate(LimelightHelpers::getTY(""), desiredPissitionYAmp);
             if(isRed){
                 rotationPID.EnableContinuousInput(0,360);
                 theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 90.0);
+                
             }
             else{
                 rotationPID.EnableContinuousInput(0,360);
@@ -64,9 +67,9 @@ RobotContainer::RobotContainer() {
         }
 
         m_drive.Drive(
-            units::meters_per_second_t{frc::ApplyDeadband(y, OIConstants::kDriveDeadband)},
-            units::meters_per_second_t{frc::ApplyDeadband(x, OIConstants::kDriveDeadband)},
-            units::radians_per_second_t{frc::ApplyDeadband(theta, OIConstants::kDriveDeadband)},
+            units::meters_per_second_t{y},
+            units::meters_per_second_t{x},
+            units::radians_per_second_t{theta},
             true, true);
       },
       {&m_drive}));
@@ -77,6 +80,7 @@ RobotContainer::RobotContainer() {
             m_ShootySubsystem.smartDashboardParams();
             frc::SmartDashboard::PutNumber("Apriltag ID",LimelightHelpers::getFiducialID(""));
             frc::SmartDashboard::PutNumber("Apriltag TX",LimelightHelpers::getTX(""));
+            frc::SmartDashboard::PutNumber("Apriltag TY",LimelightHelpers::getTY(""));
         },
         {&m_ShootySubsystem}));
 
@@ -107,7 +111,6 @@ void RobotContainer::ConfigureButtonBindings() {
             if(!shootingInAmp){ //set tag to the correct ID
                 if(isRed){
                     currentTag = 5;
-                    
                 }
                 else{
                     currentTag = 6;
@@ -115,7 +118,11 @@ void RobotContainer::ConfigureButtonBindings() {
                 LimelightHelpers::setPriorityTagID("", currentTag);
                 shootingInAmp = true;
             }
-            if(m_ShootySubsystem.SetMotorSpeed(ampTopShooterSpeed, ampBottomShooterSpeed)){
+
+            bool fireintheholeX = abs(LimelightHelpers::getTX(""))<1;
+            bool fireintheholeY = abs(desiredPissitionYAmp - LimelightHelpers::getTY(""))<1;
+            
+            if(m_ShootySubsystem.SetMotorSpeed(ampTopShooterSpeed, ampBottomShooterSpeed) and fireintheholeX and fireintheholeY){
 
                 m_ShootySubsystem.fire(true);
             }
