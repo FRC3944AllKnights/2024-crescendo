@@ -159,5 +159,7 @@ namespace ShooterConstants {
     constexpr double ampBottomShooterSpeed = 800;
     constexpr double speakerTopShooterSpeed = 1800;
     constexpr double speakerBottomShooterSpeed = 1800;
-    constexpr double desiredPissitionYAmp = 20.0;
+    constexpr double desiredPosYAmp = 20.0;
+    constexpr double desiredPosYSpeakr = 20.0;
+    constexpr double desiredPosXSpeakr = 20.0;
 }

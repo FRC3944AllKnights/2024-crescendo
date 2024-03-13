@@ -54,7 +54,7 @@ RobotContainer::RobotContainer() {
         if(shootingInAmp)
         {
             y = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
-            x = translationPID.Calculate(LimelightHelpers::getTY(""), desiredPissitionYAmp);
+            x = translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
             if(isRed){
                 rotationPID.EnableContinuousInput(0,360);
                 theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 90.0);
@@ -64,6 +64,13 @@ RobotContainer::RobotContainer() {
                 rotationPID.EnableContinuousInput(0,360);
                 theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 270.0);
             }
+        
+        }
+        else if(shootingInSpeaker)
+        {
+            
+            rotationPID.DisableContinuousInput();
+            theta = rotationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
         }
 
         m_drive.Drive(
@@ -120,7 +127,7 @@ void RobotContainer::ConfigureButtonBindings() {
             }
 
             bool fireintheholeX = abs(LimelightHelpers::getTX(""))<1;
-            bool fireintheholeY = abs(desiredPissitionYAmp - LimelightHelpers::getTY(""))<1;
+            bool fireintheholeY = abs(desiredPosYAmp - LimelightHelpers::getTY(""))<1;
             
             if(m_ShootySubsystem.SetMotorSpeed(ampTopShooterSpeed, ampBottomShooterSpeed) and fireintheholeX and fireintheholeY){
 
@@ -152,7 +159,11 @@ void RobotContainer::ConfigureButtonBindings() {
                 LimelightHelpers::setPriorityTagID("", currentTag);
                 shootingInSpeaker = true;
             }
-            if(m_ShootySubsystem.SetMotorSpeed(speakerTopShooterSpeed, speakerBottomShooterSpeed)){
+
+            bool fireintheholeX2 = abs(desiredPosXSpeakr - LimelightHelpers::getTX(""))<1;
+            bool fireintheholeY2 = abs(desiredPosYSpeakr - LimelightHelpers::getTY(""))<1;
+
+            if(m_ShootySubsystem.SetMotorSpeed(speakerTopShooterSpeed, speakerBottomShooterSpeed) and fireintheholeX2 and fireintheholeY2){
 
                 m_ShootySubsystem.fire(true);
             }
