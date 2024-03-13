@@ -14,15 +14,15 @@ ShootySubsystem::ShootySubsystem() {
     m_ShootyMotorTop.SetInverted(true);
     m_ShootyMotorBottom.SetInverted(true);
 
-    m_ShootyPIDControllerTop.SetP(1.5e-5);
-    m_ShootyPIDControllerTop.SetI(3.3e-7);
-    m_ShootyPIDControllerTop.SetD(0);
+    m_ShootyPIDControllerTop.SetP(shooterP);
+    m_ShootyPIDControllerTop.SetI(shooterI);
+    m_ShootyPIDControllerTop.SetD(shooterD);
     m_ShootyPIDControllerTop.SetFF(0.000015);
     m_ShootyPIDControllerTop.SetOutputRange(-1, 1);
 
-    m_ShootyPIDControllerBottom.SetP(1.5e-5);
-    m_ShootyPIDControllerBottom.SetI(3.3e-7);
-    m_ShootyPIDControllerBottom.SetD(0);
+    m_ShootyPIDControllerBottom.SetP(shooterP);
+    m_ShootyPIDControllerBottom.SetI(shooterI);
+    m_ShootyPIDControllerBottom.SetD(shooterD);
     m_ShootyPIDControllerBottom.SetFF(0.000015);
     m_ShootyPIDControllerBottom.SetOutputRange(-1, 1);
 
@@ -67,6 +67,9 @@ void ShootySubsystem::fire(bool fire) {
 }
 
 void ShootySubsystem::smartDashboardParams() {
+
+    frc::SmartDashboard::PutNumber("Top Shooter RPM", m_ShootyEncoderTop.GetVelocity());
+    frc::SmartDashboard::PutNumber("Bottom Shooter RPM", m_ShootyEncoderBottom.GetVelocity());
    
     left_servo_ = frc::SmartDashboard::GetNumber("Set Left Servo Position", 0.5);
     right_servo_ = frc::SmartDashboard::GetNumber("Set Right Servo Position", 0.5);
