@@ -116,6 +116,9 @@ void RobotContainer::ConfigureButtonBindings() {
         })).WhileTrue(new frc2::RunCommand([this] 
         {
             if(!shootingInAmp){ //set tag to the correct ID
+
+                m_ShootySubsystem.resetShooterI();
+
                 if(isRed){
                     currentTag = 5;
                 }
@@ -128,14 +131,8 @@ void RobotContainer::ConfigureButtonBindings() {
 
             bool fireintheholeX = abs(LimelightHelpers::getTX(""))<1;
             bool fireintheholeY = abs(desiredPosYAmp - LimelightHelpers::getTY(""))<1;
-            
             if(m_ShootySubsystem.SetMotorSpeed(ampTopShooterSpeed, ampBottomShooterSpeed) and fireintheholeX and fireintheholeY){
-
                 m_ShootySubsystem.fire(true);
-            }
-            else
-            {
-                m_ShootySubsystem.fire(false);
             }
         }));
     //Fire note into speaker
@@ -149,6 +146,9 @@ void RobotContainer::ConfigureButtonBindings() {
         })).WhileTrue(new frc2::RunCommand([this] 
         {
             if(!shootingInSpeaker){ //set tag to the correct ID
+
+                m_ShootySubsystem.resetShooterI();
+
                 if(isRed){
                     currentTag = 4;
                     
@@ -167,10 +167,7 @@ void RobotContainer::ConfigureButtonBindings() {
 
                 m_ShootySubsystem.fire(true);
             }
-            else
-            {
-                m_ShootySubsystem.fire(false);
-            }
+   
         }));
     //Retract climber piston
     frc2::JoystickButton(&m_driverController,

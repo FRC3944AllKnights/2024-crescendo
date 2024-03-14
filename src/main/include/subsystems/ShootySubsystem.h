@@ -16,6 +16,7 @@ public:
     bool SetMotorSpeed(double topspeed, double botspeed);
     void fire(bool fire);
     void smartDashboardParams();
+    void resetShooterI();
 
 private:
     rev::CANSparkMax m_ShootyMotorTop{11, rev::CANSparkMax::MotorType::kBrushless};  // Replace '1' with the CAN ID of the Spark MAX

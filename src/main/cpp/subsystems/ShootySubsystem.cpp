@@ -45,7 +45,7 @@ bool ShootySubsystem::SetMotorSpeed(double topspeed, double botspeed) {
         m_ShootyMotorTop.Set(0);
         m_ShootyMotorBottom.Set(0);
     }
-    if(topspeed <= m_ShootyEncoderTop.GetVelocity() and botspeed <= m_ShootyEncoderBottom.GetVelocity()){
+    if(topspeed - 5 < m_ShootyEncoderTop.GetVelocity() and botspeed - 5 < m_ShootyEncoderBottom.GetVelocity()){
         return true;
     }
     else{
@@ -76,4 +76,9 @@ void ShootySubsystem::smartDashboardParams() {
 
     //frc::SmartDashboard::PutNumber("Set Left Servo Position", left_servo_);
     //frc::SmartDashboard::PutNumber("Set Right Servo Position", right_servo_);
+}
+
+void ShootySubsystem::resetShooterI(){
+    m_ShootyPIDControllerBottom.SetIAccum(0.0);
+    m_ShootyPIDControllerTop.SetIAccum(0.0);
 }
