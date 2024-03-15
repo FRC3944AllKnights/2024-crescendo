@@ -6,7 +6,7 @@
 
 #include <frc/controller/PIDController.h>
 #include <frc/geometry/Translation2d.h>
-#include <frc/shuffleboard/Shuffleboard.h>
+#include <frc/SmartDashboard/SmartDashboard.h>
 #include <frc/trajectory/Trajectory.h>
 #include <frc/trajectory/TrajectoryGenerator.h>
 #include <frc2/command/InstantCommand.h>
@@ -21,6 +21,7 @@
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
+#include "LimelightHelpers.h"
 
 
 using namespace DriveConstants;
@@ -31,29 +32,65 @@ RobotContainer::RobotContainer() {
   // Configure the button bindings
   ConfigureButtonBindings();
 
+  shootingInAmp = false; //default to not shooting
+  shootingInSpeaker = false;
+  isRed = true; //default to red alliance
+  if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kBlue)
+  {
+    isRed = false;
+  }
+
   // Set up default drive command
   // The left stick controls translation of the robot.
   // Turning is controlled by the X axis of the right stick.
   m_drive.SetDefaultCommand(frc2::RunCommand(
       [this] {
         //set default values based on joysticks
-        double y = m_driverController.GetLeftY()*0.3;
-        double x = m_driverController.GetLeftX()*0.3;
-        double theta = m_driverController.GetRightX()*0.3;
+        double y = -frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband)*0.3;
+        double x = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband)*0.3;
+        double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband)*0.3;
+
+        //set pid to 90 as a test
+        if(shootingInAmp)
+        {
+            y = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
+            x = translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
+            if(isRed){
+                rotationPID.EnableContinuousInput(0,360);
+                theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 90.0);
+                
+            }
+            else{
+                rotationPID.EnableContinuousInput(0,360);
+                theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 270.0);
+            }
+        
+        }
+        else if(shootingInSpeaker)
+        {
+            
+            rotationPID.DisableContinuousInput();
+            theta = rotationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
+        }
 
         m_drive.Drive(
-            -units::meters_per_second_t{frc::ApplyDeadband(y, OIConstants::kDriveDeadband)},
-            -units::meters_per_second_t{frc::ApplyDeadband(x, OIConstants::kDriveDeadband)},
-            -units::radians_per_second_t{frc::ApplyDeadband(theta, OIConstants::kDriveDeadband)},
+            units::meters_per_second_t{y},
+            units::meters_per_second_t{x},
+            units::radians_per_second_t{theta},
             true, true);
       },
       {&m_drive}));
 
+    //using the shooty subsystem default command to use for generic smartdashboard stuff
     m_ShootySubsystem.SetDefaultCommand(frc2::RunCommand(
         [this] {
             m_ShootySubsystem.smartDashboardParams();
+            frc::SmartDashboard::PutNumber("Apriltag ID",LimelightHelpers::getFiducialID(""));
+            frc::SmartDashboard::PutNumber("Apriltag TX",LimelightHelpers::getTX(""));
+            frc::SmartDashboard::PutNumber("Apriltag TY",LimelightHelpers::getTY(""));
         },
         {&m_ShootySubsystem}));
+
 }
 
 void RobotContainer::ConfigureButtonBindings() {
@@ -63,50 +100,76 @@ void RobotContainer::ConfigureButtonBindings() {
                        frc::XboxController::Button::kRightBumper)
         .WhileTrue(new frc2::RunCommand([this] { m_drive.SetX(); }, {&m_drive}));
         */
-    //Rev up shooter
     
     //spin intake
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kA)
        .WhileFalse(new frc2::RunCommand([this] { m_IntakeSubsystem.SetIntakeMotorSpeed(0);})).WhileTrue(new frc2::RunCommand([this] {m_IntakeSubsystem.SetIntakeMotorSpeed(-.6);}));
-    //Retract climber piston
-
+    //fire note into amp
     frc2::JoystickButton(&m_driverController,
                          frc::XboxController::Button::kLeftBumper)
         .OnFalse(new frc2::InstantCommand([this] 
         { 
+            shootingInAmp = false;
             m_ShootySubsystem.SetMotorSpeed(0.0, 0.0);
             m_ShootySubsystem.fire(false);
         })).WhileTrue(new frc2::RunCommand([this] 
         {
-            if(m_ShootySubsystem.SetMotorSpeed(ampTopShooterSpeed, ampBottomShooterSpeed)){
+            if(!shootingInAmp){ //set tag to the correct ID
 
+                m_ShootySubsystem.resetShooterI();
+
+                if(isRed){
+                    currentTag = 5;
+                }
+                else{
+                    currentTag = 6;
+                }
+                LimelightHelpers::setPriorityTagID("", currentTag);
+                shootingInAmp = true;
+            }
+
+            bool fireintheholeX = abs(LimelightHelpers::getTX(""))<1;
+            bool fireintheholeY = abs(desiredPosYAmp - LimelightHelpers::getTY(""))<1;
+            if(m_ShootySubsystem.SetMotorSpeed(ampTopShooterSpeed, ampBottomShooterSpeed) and fireintheholeX and fireintheholeY){
                 m_ShootySubsystem.fire(true);
             }
-            else
-            {
-                m_ShootySubsystem.fire(false);
-            }
         }));
-
+    //Fire note into speaker
     frc2::JoystickButton(&m_driverController,
                          frc::XboxController::Button::kRightBumper)
         .OnFalse(new frc2::InstantCommand([this]
         { 
+            shootingInSpeaker = false;
             m_ShootySubsystem.SetMotorSpeed(0.0, 0.0);
             m_ShootySubsystem.fire(false);
         })).WhileTrue(new frc2::RunCommand([this] 
         {
-            if(m_ShootySubsystem.SetMotorSpeed(speakerTopShooterSpeed, speakerBottomShooterSpeed)){
+            if(!shootingInSpeaker){ //set tag to the correct ID
+
+                m_ShootySubsystem.resetShooterI();
+
+                if(isRed){
+                    currentTag = 4;
+                    
+                }
+                else{
+                    currentTag = 7;
+                }
+                LimelightHelpers::setPriorityTagID("", currentTag);
+                shootingInSpeaker = true;
+            }
+
+            bool fireintheholeX2 = abs(desiredPosXSpeakr - LimelightHelpers::getTX(""))<1;
+            bool fireintheholeY2 = abs(desiredPosYSpeakr - LimelightHelpers::getTY(""))<1;
+
+            if(m_ShootySubsystem.SetMotorSpeed(speakerTopShooterSpeed, speakerBottomShooterSpeed) and fireintheholeX2 and fireintheholeY2){
 
                 m_ShootySubsystem.fire(true);
             }
-            else
-            {
-                m_ShootySubsystem.fire(false);
-            }
+   
         }));
-
+    //Retract climber piston
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kX)
         .OnTrue(new frc2::InstantCommand([this] { m_ClimberSubsystem.retractPiston();}));
