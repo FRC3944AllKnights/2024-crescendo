@@ -155,11 +155,11 @@ namespace ShooterConstants {
     constexpr double rightServoInitPosition = 0.1;
     constexpr double leftServoFirePosition = 0.3;
     constexpr double rightServoFirePosition = 0.7;
-    constexpr double ampTopShooterSpeed = 700;
-    constexpr double ampBottomShooterSpeed = 800;
+    constexpr double ampTopShooterSpeed = 50;//700;
+    constexpr double ampBottomShooterSpeed = 1450; //800;
     constexpr double speakerTopShooterSpeed = 1800;
     constexpr double speakerBottomShooterSpeed = 1800;
-    constexpr double desiredPosYAmp = 20.0;
+    constexpr double desiredPosYAmp = 15.0;
     constexpr double desiredPosYSpeakr = -15.5;
     constexpr double desiredPosXSpeakr = 0.0;
     constexpr double shooterP = 1.5e-4;

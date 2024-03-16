@@ -52,9 +52,11 @@ RobotContainer::RobotContainer() {
 
         //set pid to 90 as a test
         if(shootingInAmp)
-        {
-            y = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
-            x = translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
+        {   
+            if(LimelightHelpers::getTX("") != 0)
+                y = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
+            if(LimelightHelpers::getTY("") != 0)
+                x = translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
             if(isRed){
                 rotationPID.EnableContinuousInput(0,360);
                 theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 90.0);
@@ -129,8 +131,8 @@ void RobotContainer::ConfigureButtonBindings() {
                 shootingInAmp = true;
             }
 
-            bool fireintheholeX = abs(LimelightHelpers::getTX(""))<1;
-            bool fireintheholeY = abs(desiredPosYAmp - LimelightHelpers::getTY(""))<1;
+            bool fireintheholeX = abs(LimelightHelpers::getTX(""))<1.5;
+            bool fireintheholeY = abs(desiredPosYAmp - LimelightHelpers::getTY(""))<1.5;
             if(m_ShootySubsystem.SetMotorSpeed(ampTopShooterSpeed, ampBottomShooterSpeed) and fireintheholeX and fireintheholeY){
                 m_ShootySubsystem.fire(true);
             }

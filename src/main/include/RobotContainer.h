@@ -55,7 +55,7 @@ class RobotContainer {
   IntakeSubsystem m_IntakeSubsystem;
   ClimberSubsystem m_ClimberSubsystem;
 
-  frc::PIDController translationPID{0.01, 5.5e-3, 0.0};
+  frc::PIDController translationPID{0.0125, 0.25e-3, 0.0};
   frc::PIDController rotationPID{0.01, 5.5e-3, 0.0};
 
   void ConfigureButtonBindings();
