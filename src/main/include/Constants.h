@@ -30,9 +30,9 @@ namespace DriveConstants {
 constexpr units::meters_per_second_t kMaxSpeed = 4.8_mps;
 constexpr units::radians_per_second_t kMaxAngularSpeed{2 * std::numbers::pi};
 
-constexpr double kDirectionSlewRate = 0.2;   // radians per second
-constexpr double kMagnitudeSlewRate = 0.4;   // percent per second (1 = 100%)
-constexpr double kRotationalSlewRate = 0.5;  // percent per second (1 = 100%)
+constexpr double kDirectionSlewRate = 1.2;   // radians per second
+constexpr double kMagnitudeSlewRate = 1.8;   // percent per second (1 = 100%)
+constexpr double kRotationalSlewRate = 2.0;  // percent per second (1 = 100%)
 
 // Chassis configuration
 constexpr units::meter_t kTrackWidth =
@@ -155,11 +155,11 @@ namespace ShooterConstants {
     constexpr double rightServoInitPosition = 0.1;
     constexpr double leftServoFirePosition = 0.3;
     constexpr double rightServoFirePosition = 0.7;
-    constexpr double ampTopShooterSpeed = 700;
-    constexpr double ampBottomShooterSpeed = 800;
+    constexpr double ampTopShooterSpeed = 50;//700;
+    constexpr double ampBottomShooterSpeed = 1450; //800;
     constexpr double speakerTopShooterSpeed = 1800;
     constexpr double speakerBottomShooterSpeed = 1800;
-    constexpr double desiredPosYAmp = 20.0;
+    constexpr double desiredPosYAmp = 15.0;
     constexpr double desiredPosYSpeakr = -15.5;
     constexpr double desiredPosXSpeakr = 0.0;
     constexpr double shooterP = 1.5e-4;
