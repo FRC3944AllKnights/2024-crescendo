@@ -27,7 +27,7 @@ DriveSubsystem::DriveSubsystem()
                   kRearRightChassisAngularOffset},
       m_odometry{kDriveKinematics,
                  frc::Rotation2d(units::radian_t{
-                     getNavXHeading()}),
+                     GetHeading()}),
                  {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
                   m_rearLeft.GetPosition(), m_rearRight.GetPosition()},
                  frc::Pose2d{}} {}
@@ -39,9 +39,9 @@ frc2::CommandPtr DriveSubsystem::setSlowFactor(double slow){
 void DriveSubsystem::Periodic() {
   // Implementation of subsystem periodic method goes here.
   m_odometry.Update(frc::Rotation2d(units::radian_t{
-                        getNavXHeading()}),
-                    {m_frontLeft.GetPosition(), m_rearLeft.GetPosition(),
-                     m_frontRight.GetPosition(), m_rearRight.GetPosition()});
+                        GetHeading()}),
+                    {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
+                  m_rearLeft.GetPosition(), m_rearRight.GetPosition()});
 }
 
 void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
@@ -52,7 +52,8 @@ void DriveSubsystem::Drive(units::meters_per_second_t xSpeed,
   double ySpeedCommanded;
   
   frc::SmartDashboard::PutNumber("gyro heading",GetNormalizedHeading());
-  frc::SmartDashboard::PutNumber("gyro rate", -ahrs.GetRate());
+  frc::SmartDashboard::PutNumber("Robot X", GetPose().X().value());
+  frc::SmartDashboard::PutNumber("Robot Y", GetPose().Y().value());
 
   if (rateLimit) {
     // Convert XY to polar for rate limiting

@@ -5,8 +5,8 @@
 
 
 IntakeSubsystem::IntakeSubsystem() {
-    m_colorMatcher.AddColorMatch(kGamePiece);
-    m_colorMatcher.AddColorMatch(kBackGround);
+    //m_colorMatcher.AddColorMatch(kGamePiece);
+    //m_colorMatcher.AddColorMatch(kBackGround);
 
     m_IntakeMotor.RestoreFactoryDefaults();
 
@@ -30,12 +30,12 @@ void IntakeSubsystem::SetIntakeMotorSpeed(double speed) {
 
 bool IntakeSubsystem::GamePieceDetected(){
     double confidence = 0.1;
-    frc::Color detectedColor = m_colorSensor.GetColor();
-    frc::Color matchedColor = m_colorMatcher.MatchClosestColor(detectedColor, confidence);
+    //frc::Color detectedColor = m_colorSensor.GetColor();
+    //frc::Color matchedColor = m_colorMatcher.MatchClosestColor(detectedColor, confidence);
 
-    if (matchedColor == kGamePiece){
-        return true;
-    }
+    //if (matchedColor == kGamePiece){
+    //    return true;
+    //}
     return true; //bypass logic for now since color sensor isn't set up
 }
 

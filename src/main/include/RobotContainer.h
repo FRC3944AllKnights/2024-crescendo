@@ -20,6 +20,7 @@
 #include "subsystems/ShootySubsystem.h"
 #include "subsystems/IntakeSubsystem.h"
 #include "subsystems/ClimberSubsystem.h"
+#include "commands/autonomous.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -54,6 +55,9 @@ class RobotContainer {
   ShootySubsystem m_ShootySubsystem;
   IntakeSubsystem m_IntakeSubsystem;
   ClimberSubsystem m_ClimberSubsystem;
+
+  frc2::CommandPtr m_ShootOne = autos::ShootOne(&m_drive, &m_ShootySubsystem);
+  frc2::CommandPtr m_ShootTwo = autos::ShootTwo(&m_drive, &m_ShootySubsystem, &m_IntakeSubsystem);
 
   frc::PIDController translationPID{0.0125, 0.25e-3, 0.0};
   frc::PIDController rotationPID{0.01, 5.5e-3, 0.0};
