@@ -166,8 +166,8 @@ void RobotContainer::ConfigureButtonBindings() {
                 shootingInSpeaker = true;
             }
 
-            bool fireintheholeX2 = abs(desiredPosXSpeakr - LimelightHelpers::getTX(""))<1;
-            bool fireintheholeY2 = abs(desiredPosYSpeakr - LimelightHelpers::getTY(""))<1;
+            bool fireintheholeX2 = abs(desiredPosXSpeakr - LimelightHelpers::getTX(""))<2;
+            bool fireintheholeY2 = abs(desiredPosYSpeakr - LimelightHelpers::getTY(""))<2;
 
             if(m_ShootySubsystem.SetMotorSpeed(speakerTopShooterSpeed, speakerBottomShooterSpeed) and fireintheholeX2 and fireintheholeY2){
 
