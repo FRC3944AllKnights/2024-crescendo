@@ -8,12 +8,14 @@
 #include <rev/SparkPIDController.h>
 #include <rev/SparkRelativeEncoder.h>
 #include <rev/colorMatch.h>
+#include <frc/AddressableLED.h>
 
 class IntakeSubsystem : public frc2::SubsystemBase {
 public:
     IntakeSubsystem();
     void SetIntakeMotorSpeed(double speed);
     bool GamePieceDetected();
+    void SetColorLED(int R, int G, int B);
 
 private:
     rev::CANSparkMax m_IntakeMotor{20, rev::CANSparkMax::MotorType::kBrushless};  // Replace '20' with the CAN ID of the Spark MAX
@@ -23,10 +25,21 @@ private:
     rev::SparkPIDController m_IntakePIDController =
         m_IntakeMotor.GetPIDController();
 
-    //rev::ColorSensorV3 m_colorSensor{frc::I2C::Port::kOnboard};
+    rev::ColorSensorV3 m_colorSensor{frc::I2C::Port::kOnboard};
 
-    //rev::ColorMatch m_colorMatcher;
-    //frc::Color kGamePiece = frc::Color(0.361, 0.524, 0.113);
-    //frc::Color kBackGround = frc::Color(0.143, 0.427, 0.429);
+    rev::ColorMatch m_colorMatcher;
+    frc::Color kGamePiece = frc::Color(0.361, 0.524, 0.113);
+    frc::Color kBackGround = frc::Color(0.143, 0.427, 0.429);
+   
+    static constexpr int kLength = 60;
+
+    // PWM port 9
+    // Must be a PWM header, not MXP or DIO
+    frc::AddressableLED m_led{9};
+    std::array<frc::AddressableLED::LEDData, kLength>
+      m_ledBuffer;  // Reuse the buffer
+    // Store what the last hue of the first pixel is
+    int firstPixelHue = 0;
+
     
 };
