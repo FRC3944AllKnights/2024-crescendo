@@ -22,4 +22,5 @@
 namespace autos {
     frc2::CommandPtr ShootOne(DriveSubsystem* drive, ShootySubsystem* shoot);
     frc2::CommandPtr ShootTwo(DriveSubsystem* drive, ShootySubsystem* shoot, IntakeSubsystem* intake);
-}   frc2::CommandPTr EPICTHREESHOOTERYEAHBABY(Drivesystem* drive, ShootySubsystem* shoot, IntakeSubsystem* intake);
+    frc2::CommandPtr EpicShooterThreeYeahBaby(DriveSubsystem* drive, ShootySubsystem* shoot, IntakeSubsystem* intake);
+}
