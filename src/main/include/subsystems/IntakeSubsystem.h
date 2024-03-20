@@ -28,10 +28,10 @@ private:
     rev::ColorSensorV3 m_colorSensor{frc::I2C::Port::kOnboard};
 
     rev::ColorMatch m_colorMatcher;
-    frc::Color kGamePiece = frc::Color(0.361, 0.524, 0.113);
-    frc::Color kBackGround = frc::Color(0.143, 0.427, 0.429);
+    frc::Color kGamePiece = frc::Color(0.666626, 0.299927, 0.047729);
+    frc::Color kBackGround = frc::Color(0.380981, 0.441772, 0.170776);
    
-    static constexpr int kLength = 60;
+    static constexpr int kLength = 48;
 
     // PWM port 9
     // Must be a PWM header, not MXP or DIO

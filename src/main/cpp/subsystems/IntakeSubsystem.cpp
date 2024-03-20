@@ -6,8 +6,8 @@
 
 
 IntakeSubsystem::IntakeSubsystem() {
-    //m_colorMatcher.AddColorMatch(kGamePiece);
-    //m_colorMatcher.AddColorMatch(kBackGround);
+    m_colorMatcher.AddColorMatch(kGamePiece);
+    m_colorMatcher.AddColorMatch(kBackGround);
 
     m_IntakeMotor.RestoreFactoryDefaults();
     
@@ -48,11 +48,16 @@ bool IntakeSubsystem::GamePieceDetected(){
     frc::SmartDashboard::PutNumber("Color B", detectedColor.blue);
 
     frc::Color matchedColor = m_colorMatcher.MatchClosestColor(detectedColor, confidence);
+    frc::SmartDashboard::PutNumber("MATCHED R", matchedColor.red);
+    frc::SmartDashboard::PutNumber("MATCHED G", matchedColor.green);
+    frc::SmartDashboard::PutNumber("MATCHED B", matchedColor.blue);
 
     if (matchedColor == kGamePiece){
         return true;
     }
+    else {
     return false;
+    }
     //return true; //bypass logic for now since color sensor isn't set up
 }
 
