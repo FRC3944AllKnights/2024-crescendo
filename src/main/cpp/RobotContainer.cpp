@@ -29,11 +29,12 @@ using namespace DriveConstants;
 RobotContainer::RobotContainer() {
     m_chooser.SetDefaultOption("SHOOT 1 CENTER", m_ShootOne.get());
     m_chooser.AddOption("SHOOT 2 CENTER", m_ShootTwo.get());
+    m_chooser.AddOption("SUPER DUPER EPIC THREE RING MODE PICK ME PICK ME", m_EpicShooterThreeYeahBaby.get());
     frc::SmartDashboard::PutData("auto modes", &m_chooser);
      
   // Initialize all of your commands and subsystems here
 
-  // Configure the button bindings
+  // Configure the button bindingsR
   ConfigureButtonBindings();
 
   shootingInAmp = false; //default to not shooting
