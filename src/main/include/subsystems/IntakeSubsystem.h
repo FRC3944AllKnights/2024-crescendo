@@ -31,7 +31,7 @@ private:
     frc::Color kGamePiece = frc::Color(0.666626, 0.299927, 0.047729);
     frc::Color kBackGround = frc::Color(0.380981, 0.441772, 0.170776);
    
-    static constexpr int kLength = 48;
+    static constexpr int kLength = 46;
 
     // PWM port 9
     // Must be a PWM header, not MXP or DIO
