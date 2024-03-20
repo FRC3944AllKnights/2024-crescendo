@@ -8,8 +8,8 @@ ShootySubsystem::ShootySubsystem() {
     m_ShootyMotorTop.RestoreFactoryDefaults();
     m_ShootyMotorBottom.RestoreFactoryDefaults();
 
-    m_ShootyMotorTop.SetIdleMode(rev::CANSparkBase::IdleMode::kCoast);
-    m_ShootyMotorBottom.SetIdleMode(rev::CANSparkBase::IdleMode::kCoast);
+    m_ShootyMotorTop.SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
+    m_ShootyMotorBottom.SetIdleMode(rev::CANSparkBase::IdleMode::kBrake);
 
     m_ShootyMotorTop.SetInverted(true);
     m_ShootyMotorBottom.SetInverted(true);

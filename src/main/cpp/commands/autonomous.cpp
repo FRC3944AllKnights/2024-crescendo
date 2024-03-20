@@ -18,7 +18,7 @@ frc2::CommandPtr autos::ShootOne(DriveSubsystem* drive, ShootySubsystem* shoot) 
                 return shoot->SetMotorSpeed(1800, 1800);
              },
             {shoot}).ToPtr(),
-    frc2::cmd::Wait(0.5_s).AsProxy().AndThen(frc2::InstantCommand(
+    frc2::cmd::Wait(1.0_s).AsProxy().AndThen(frc2::InstantCommand(
             [shoot] {
                 shoot->fire(false);
                 shoot->SetMotorSpeed(0, 0);
@@ -29,7 +29,7 @@ frc2::CommandPtr autos::ShootOne(DriveSubsystem* drive, ShootySubsystem* shoot) 
             // Reset odometry on command start
              [drive] { drive->ResetOdometry(frc::Pose2d{0_m, 0_m, 0_deg}); },
              // Drive while the command is executing
-             [drive] {drive->Drive(-0.1_mps, 0_mps, 0_rad_per_s, false, true);},
+             [drive] {drive->Drive(-0.2_mps, 0_mps, 0_rad_per_s, false, true);},
              // stop driving
              [drive](bool interrupted) {drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);},
              //distance to drive
@@ -56,7 +56,7 @@ frc2::CommandPtr autos::ShootTwo(DriveSubsystem* drive, ShootySubsystem* shoot, 
                 return shoot->SetMotorSpeed(1800, 1800);
              },
             {shoot}).ToPtr(),
-    frc2::cmd::Wait(0.5_s).AsProxy().AndThen(frc2::InstantCommand(
+    frc2::cmd::Wait(1.0_s).AsProxy().AndThen(frc2::InstantCommand(
             //stop shooting
             [shoot] {
                 shoot->fire(false);
@@ -79,7 +79,7 @@ frc2::CommandPtr autos::ShootTwo(DriveSubsystem* drive, ShootySubsystem* shoot, 
              [drive](bool interrupted) {drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);},
              //distance to drive
              [drive] {
-              return drive->GetPose().X() <= -2.0_m;
+              return drive->GetPose().X() <= -1.8_m;
              },
              // Requires the drive subsystem
              {drive}).ToPtr(), 
@@ -91,14 +91,14 @@ frc2::CommandPtr autos::ShootTwo(DriveSubsystem* drive, ShootySubsystem* shoot, 
                 drive->ResetOdometry(frc::Pose2d{0_m, 0_m, 0_deg});
              },
              // Drive forward while the command is executing 
-             [drive] {drive->Drive(0.1_mps, 0_mps, 0_rad_per_s, false, true);},
+             [drive] {drive->Drive(0.2_mps, 0_mps, 0_rad_per_s, false, true);},
              // stop driving 
              [drive](bool interrupted) {
                 drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);
                 },
              //distance to drive
              [drive] {
-              return drive->GetPose().X() >= 2.0_m;
+              return drive->GetPose().X() >= 1.8_m;
              },
              // Requires the drive subsystem
              {drive}).ToPtr(),
@@ -126,7 +126,7 @@ frc2::CommandPtr autos::ShootTwo(DriveSubsystem* drive, ShootySubsystem* shoot, 
                 return shoot->SetMotorSpeed(1800, 1800);
              },
             {shoot, drive}).ToPtr(),
-    frc2::cmd::Wait(0.5_s).AsProxy().AndThen(frc2::InstantCommand(
+    frc2::cmd::Wait(1.0_s).AsProxy().AndThen(frc2::InstantCommand(
             //stop shooting
             [shoot] {
                 shoot->fire(false);
@@ -151,7 +151,7 @@ frc2::CommandPtr autos::EpicShooterThreeYeahBaby(DriveSubsystem* drive, ShootySu
                 return shoot->SetMotorSpeed(1800, 1800);
              },
             {shoot}).ToPtr(),
-    frc2::cmd::Wait(0.5_s).AsProxy().AndThen(frc2::InstantCommand(
+    frc2::cmd::Wait(1.0_s).AsProxy().AndThen(frc2::InstantCommand(
             //stop shooting
             [shoot] {
                 shoot->fire(false);
@@ -168,13 +168,13 @@ frc2::CommandPtr autos::EpicShooterThreeYeahBaby(DriveSubsystem* drive, ShootySu
              [drive] { drive->ResetOdometry(frc::Pose2d{0_m, 0_m, 0_deg}); },
              // Drive backward while the command is executing
              [drive] {
-                drive->Drive(-0.1_mps, 0_mps, 0_rad_per_s, false, true);
+                drive->Drive(-0.3_mps, 0_mps, 0_rad_per_s, false, true);
              },
              // stop driving
              [drive](bool interrupted) {drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);},
              //distance to drive
              [drive] {
-              return drive->GetPose().X() <= -2.0_m;
+              return drive->GetPose().X() <= -1.7_m;
              },
              // Requires the drive subsystem
              {drive}).ToPtr(), 
@@ -186,14 +186,14 @@ frc2::CommandPtr autos::EpicShooterThreeYeahBaby(DriveSubsystem* drive, ShootySu
                 drive->ResetOdometry(frc::Pose2d{0_m, 0_m, 0_deg});
              },
              // Drive forward while the command is executing 
-             [drive] {drive->Drive(0.1_mps, 0_mps, 0_rad_per_s, false, true);},
+             [drive] {drive->Drive(0.3_mps, 0_mps, 0_rad_per_s, false, true);},
              // stop driving 
              [drive](bool interrupted) {
                 drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);
                 },
-             //distance to drive
+             //distance to drivee
              [drive] {
-              return drive->GetPose().X() >= 2.0_m;
+              return drive->GetPose().X() >= 1.5_m;
              },
              // Requires the drive subsystem
              {drive}).ToPtr(),
@@ -221,7 +221,7 @@ frc2::CommandPtr autos::EpicShooterThreeYeahBaby(DriveSubsystem* drive, ShootySu
                 return shoot->SetMotorSpeed(1800, 1800);
              },
             {shoot, drive}).ToPtr(),
-    frc2::cmd::Wait(0.5_s).AsProxy().AndThen(frc2::InstantCommand(
+    frc2::cmd::Wait(1.0_s).AsProxy().AndThen(frc2::InstantCommand(
             //stop shooting
             [shoot] {
                 shoot->fire(false);
@@ -239,7 +239,7 @@ frc2::CommandPtr autos::EpicShooterThreeYeahBaby(DriveSubsystem* drive, ShootySu
              [drive] { drive->ResetOdometry(frc::Pose2d{0_m, 0_m, 0_deg}); },
              // Drive sideways while the command is executing
              [drive] {
-                if(drive->GetPose().Y() >= 1.45_m)
+                if(drive->GetPose().Y() <= 1.35_m)
                 {
                   drive->Drive(-0.2_mps, 0.3_mps, 0_rad_per_s, false, true);
                 }
@@ -251,7 +251,7 @@ frc2::CommandPtr autos::EpicShooterThreeYeahBaby(DriveSubsystem* drive, ShootySu
              [drive](bool interrupted) {drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);},
              //distance to drive
              [drive] {
-              return drive->GetPose().X() <= -2.0_m;
+              return drive->GetPose().X() <= -1.8_m;
               
              },
              // Requires the drive subsystem
@@ -266,9 +266,9 @@ frc2::CommandPtr autos::EpicShooterThreeYeahBaby(DriveSubsystem* drive, ShootySu
              },
              // Drive forward while the command is executing 
              [drive] {
-                if(drive->GetPose().Y() >= -1.2_m)
+                if(drive->GetPose().Y() >= -1.0_m)
                 {
-                  drive->Drive(0.2_mps, -0.3_mps, 0_rad_per_s, false, true);
+                  drive->Drive(0.2_mps, -0.2_mps, 0_rad_per_s, false, true);
                 }
                 else{
                   drive->Drive(0.2_mps, 0.0_mps, 0_rad_per_s, false, true);
@@ -280,7 +280,7 @@ frc2::CommandPtr autos::EpicShooterThreeYeahBaby(DriveSubsystem* drive, ShootySu
                 },
              //distance to drive
              [drive] {
-              return drive->GetPose().X() >= 2.0_m;
+              return drive->GetPose().X() >= 1.9_m;
              },
              // Requires the drive subsystem
              {drive}).ToPtr(),
@@ -308,7 +308,7 @@ frc2::CommandPtr autos::EpicShooterThreeYeahBaby(DriveSubsystem* drive, ShootySu
                 return shoot->SetMotorSpeed(1800, 1800);
              },
             {shoot, drive}).ToPtr(),
-    frc2::cmd::Wait(0.5_s).AsProxy().AndThen(frc2::InstantCommand(
+    frc2::cmd::Wait(1.0_s).AsProxy().AndThen(frc2::InstantCommand(
             //stop shooting
             [shoot] {
                 shoot->fire(false);
