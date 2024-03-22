@@ -59,20 +59,21 @@ RobotContainer::RobotContainer() {
         //set pid to 90 as a test
         if(shootingInAmp)
         {   
-            if(LimelightHelpers::getTX("") != 0)
-                y = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
-            
             if(isRed){
                 rotationPID.EnableContinuousInput(0,360);
                 theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 270.0);
                 if(LimelightHelpers::getTY("") != 0)
                     x = -translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
+                if(LimelightHelpers::getTX("") != 0)
+                    y = translationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
             }
             else{
                 rotationPID.EnableContinuousInput(0,360);
                 theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 90.0);
                 if(LimelightHelpers::getTY("") != 0)
                     x = translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
+                if(LimelightHelpers::getTX("") != 0)
+                    y = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
             }
         
         }
