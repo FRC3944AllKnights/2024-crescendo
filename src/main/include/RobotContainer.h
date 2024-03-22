@@ -58,10 +58,11 @@ class RobotContainer {
 
   frc2::CommandPtr m_ShootOne = autos::ShootOne(&m_drive, &m_ShootySubsystem);
   frc2::CommandPtr m_ShootTwo = autos::ShootTwo(&m_drive, &m_ShootySubsystem, &m_IntakeSubsystem);
+  frc2::CommandPtr m_TurnLeftShootOne = autos::TurnLeftShootOne(&m_drive, &m_ShootySubsystem);
   frc2::CommandPtr m_EpicShooterThreeYeahBaby = autos::EpicShooterThreeYeahBaby(&m_drive, &m_ShootySubsystem, &m_IntakeSubsystem);
 
 
-  frc::PIDController translationPID{0.0125, 0.25e-3, 0.0};
+  frc::PIDController translationPID{0.0125, 1.0e-3, 0.0};
   frc::PIDController rotationPID{0.01, 5.5e-3, 0.0};
 
   void ConfigureButtonBindings();

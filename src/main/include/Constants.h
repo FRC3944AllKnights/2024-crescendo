@@ -144,6 +144,8 @@ namespace ClimberConstants {
     constexpr int pneumaticHubCANID = 10;
     constexpr int climberExtendChannel = 0;
     constexpr int climberRetractChannel = 15;
+    constexpr int climberExtendChannel2 = 4;
+    constexpr int climberRetractChannel2 = 2;
 }
 
 namespace ShooterConstants {
@@ -165,5 +167,6 @@ namespace ShooterConstants {
     constexpr double shooterP = 1.5e-4;
     constexpr double shooterI = 5e-7;
     constexpr double shooterD = 0;
+    
     
 }

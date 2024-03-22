@@ -16,4 +16,5 @@ public:
 private:
     frc::PneumaticHub m_PH{pneumaticHubCANID};
     frc::DoubleSolenoid m_doubleSolenoid= m_PH.MakeDoubleSolenoid(climberExtendChannel,climberRetractChannel);
+    frc::DoubleSolenoid m_doubleSolenoid2= m_PH.MakeDoubleSolenoid(climberExtendChannel2,climberRetractChannel2);
 };

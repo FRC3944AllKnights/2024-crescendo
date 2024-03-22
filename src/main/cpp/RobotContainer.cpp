@@ -28,6 +28,7 @@ using namespace DriveConstants;
 
 RobotContainer::RobotContainer() {
     m_chooser.SetDefaultOption("SHOOT 1 CENTER", m_ShootOne.get());
+    m_chooser.AddOption("TURN LEFT SHOOT ONE", m_TurnLeftShootOne.get());
     m_chooser.AddOption("SHOOT 2 CENTER", m_ShootTwo.get());
     m_chooser.AddOption("SUPER DUPER EPIC THREE RING MODE PICK ME PICK ME", m_EpicShooterThreeYeahBaby.get());
     frc::SmartDashboard::PutData("auto modes", &m_chooser);
@@ -51,25 +52,27 @@ RobotContainer::RobotContainer() {
   m_drive.SetDefaultCommand(frc2::RunCommand(
       [this] {
         //set default values based on joysticks
-        double y = -frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband)*0.3;
-        double x = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband)*0.3;
-        double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband)*0.3;
+        double y = -frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband)*1.09;
+        double x = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband)*1.09;
+        double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband)*0.4;
 
         //set pid to 90 as a test
         if(shootingInAmp)
         {   
             if(LimelightHelpers::getTX("") != 0)
                 y = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
-            if(LimelightHelpers::getTY("") != 0)
-                x = translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
+            
             if(isRed){
                 rotationPID.EnableContinuousInput(0,360);
-                theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 90.0);
-                
+                theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 270.0);
+                if(LimelightHelpers::getTY("") != 0)
+                    x = -translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
             }
             else{
                 rotationPID.EnableContinuousInput(0,360);
-                theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 270.0);
+                theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 90.0);
+                if(LimelightHelpers::getTY("") != 0)
+                    x = translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
             }
         
         }
@@ -168,7 +171,7 @@ void RobotContainer::ConfigureButtonBindings() {
             }
 
             bool fireintheholeX2 = abs(desiredPosXSpeakr - LimelightHelpers::getTX(""))<2;
-            bool fireintheholeY2 = abs(desiredPosYSpeakr - LimelightHelpers::getTY(""))<3;
+            bool fireintheholeY2 = abs(desiredPosYSpeakr - LimelightHelpers::getTY(""))<4;
 
             if(m_ShootySubsystem.SetMotorSpeed(speakerTopShooterSpeed, speakerBottomShooterSpeed) and fireintheholeX2 and fireintheholeY2){
 
@@ -185,7 +188,14 @@ void RobotContainer::ConfigureButtonBindings() {
                         frc::XboxController::Button::kY)
         .OnTrue(new frc2::InstantCommand([this] { m_ClimberSubsystem.extendPiston();}));
 
+
+     frc2::JoystickButton(&m_driverController,
+                        frc::XboxController::Button::kStart)
+        .OnTrue(new frc2::InstantCommand([this] { m_drive.ZeroHeading();}));
+    //Extend climber piston
+
 }
+    
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {
  return m_chooser.GetSelected();
