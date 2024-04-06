@@ -54,7 +54,7 @@ RobotContainer::RobotContainer() {
         //set default values based on joysticks
         double y = -frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband)*1.09;
         double x = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband)*1.09;
-        double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband)*0.4;
+        double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband)*0.6;
 
         //set pid to 90 as a test
         if(shootingInAmp)
@@ -174,7 +174,7 @@ void RobotContainer::ConfigureButtonBindings() {
             bool fireintheholeX2 = abs(desiredPosXSpeakr - LimelightHelpers::getTX(""))<2;
             bool fireintheholeY2 = abs(desiredPosYSpeakr - LimelightHelpers::getTY(""))<4;
 
-            if(m_ShootySubsystem.SetMotorSpeed(speakerTopShooterSpeed, speakerBottomShooterSpeed) and fireintheholeX2 and fireintheholeY2){
+            if(m_ShootySubsystem.SetMotorSpeed(speakerTopShooterSpeed, speakerBottomShooterSpeed)){
 
                 m_ShootySubsystem.fire(true);
             }

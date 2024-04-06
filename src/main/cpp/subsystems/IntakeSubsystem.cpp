@@ -29,15 +29,13 @@ IntakeSubsystem::IntakeSubsystem() {
 void IntakeSubsystem::SetIntakeMotorSpeed(double speed) {
     if (!GamePieceDetected()){
        //m_IntakePIDController.SetReference(speed, rev::ControlType::kVelocity);
-       m_IntakeMotor.Set(speed);
-       SetColorLED(0, 0, 255);
-
+       SetColorLED(0, 0, 85);
     }
     else{
         //m_IntakePIDController.SetReference(0, rev::ControlType::kVelocity);
-        m_IntakeMotor.Set(0);
-        SetColorLED(255, 175, 8);
+        SetColorLED(85, 58, 3);
     }
+    m_IntakeMotor.Set(speed);
 }
 
 bool IntakeSubsystem::GamePieceDetected(){
