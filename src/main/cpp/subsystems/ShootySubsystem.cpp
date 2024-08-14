@@ -25,14 +25,6 @@ ShootySubsystem::ShootySubsystem() {
     m_ShootyPIDControllerBottom.SetD(shooterD);
     m_ShootyPIDControllerBottom.SetFF(0.000015);
     m_ShootyPIDControllerBottom.SetOutputRange(-1, 1);
-
-    leftServo.Set(leftServoInitPosition);
-    rightServo.Set(rightServoInitPosition);
-
-   
-
-    frc::SmartDashboard::PutNumber("Set Left Servo Position", left_servo_);
-    frc::SmartDashboard::PutNumber("Set Right Servo Position", right_servo_);
 }
 
 bool ShootySubsystem::SetMotorSpeed(double topspeed, double botspeed) {
@@ -56,13 +48,13 @@ bool ShootySubsystem::SetMotorSpeed(double topspeed, double botspeed) {
 void ShootySubsystem::fire(bool fire) {
     if(fire) //&& abs(m_ShootyEncoderTop.GetVelocity()) > top_shooter_speed_ && abs(m_ShootyEncoderBottom.GetVelocity()) > bottom_shooter_speed_)
     {
-        leftServo.Set(leftServoFirePosition);
-        rightServo.Set(rightServoFirePosition);
+        m_LaunchMotorLeft.Set(-LaunchMotorSpeed);
+        m_LaunchMotorRight.Set(LaunchMotorSpeed);
     }
     else
     {
-        leftServo.Set(leftServoInitPosition);
-        rightServo.Set(rightServoInitPosition);
+        m_LaunchMotorLeft.Set(0.0);
+        m_LaunchMotorRight.Set(0.0);
     }
 }
 
@@ -70,9 +62,6 @@ void ShootySubsystem::smartDashboardParams() {
 
     frc::SmartDashboard::PutNumber("Top Shooter RPM", m_ShootyEncoderTop.GetVelocity());
     frc::SmartDashboard::PutNumber("Bottom Shooter RPM", m_ShootyEncoderBottom.GetVelocity());
-   
-    left_servo_ = frc::SmartDashboard::GetNumber("Set Left Servo Position", 0.5);
-    right_servo_ = frc::SmartDashboard::GetNumber("Set Right Servo Position", 0.5);
 
     //frc::SmartDashboard::PutNumber("Set Left Servo Position", left_servo_);
     //frc::SmartDashboard::PutNumber("Set Right Servo Position", right_servo_);
