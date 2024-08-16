@@ -48,8 +48,8 @@ bool ShootySubsystem::SetMotorSpeed(double topspeed, double botspeed) {
 void ShootySubsystem::fire(bool fire) {
     if(fire) //&& abs(m_ShootyEncoderTop.GetVelocity()) > top_shooter_speed_ && abs(m_ShootyEncoderBottom.GetVelocity()) > bottom_shooter_speed_)
     {
-        m_LaunchMotorLeft.Set(-LaunchMotorSpeed);
-        m_LaunchMotorRight.Set(LaunchMotorSpeed);
+        m_LaunchMotorLeft.Set(LaunchMotorSpeed);
+        m_LaunchMotorRight.Set(-LaunchMotorSpeed);
     }
     else
     {
