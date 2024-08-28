@@ -54,7 +54,7 @@ RobotContainer::RobotContainer() {
         //set default values based on joysticks
         double y = -frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband)*1.09;
         double x = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband)*1.09;
-        double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband)*0.4;
+        double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband)*0.8;
 
         //set pid to 90 as a test
         if(shootingInAmp)
@@ -115,6 +115,10 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kA)
        .WhileFalse(new frc2::RunCommand([this] { m_IntakeSubsystem.SetIntakeMotorSpeed(0);})).WhileTrue(new frc2::RunCommand([this] {m_IntakeSubsystem.SetIntakeMotorSpeed(-.6);}));
+    //blind fire button
+    frc2::JoystickButton(&m_driverController,
+                        frc::XboxController::Button::kB)
+       .WhileTrue(new frc2::RunCommand([this] {m_ShootySubsystem.fire(true);}));
     //fire note into amp
     frc2::JoystickButton(&m_driverController,
                          frc::XboxController::Button::kLeftBumper)
