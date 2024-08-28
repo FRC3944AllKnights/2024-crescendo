@@ -52,8 +52,22 @@ RobotContainer::RobotContainer() {
   m_drive.SetDefaultCommand(frc2::RunCommand(
       [this] {
         //set default values based on joysticks
-        double y = -frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband)*1.09;
-        double x = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband)*1.09;
+        double y = -frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband);
+        if (y<0){
+            y = -y*y*1.09;
+        }
+        else
+        {
+            y = y*y*y*1.09;
+        }
+        double x = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband);
+        if (x<0){
+            x = -x*x*1.09;
+        }
+        else
+        {
+            x = x*x*1.09;
+        }
         double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband)*0.8;
 
         //set pid to 90 as a test
