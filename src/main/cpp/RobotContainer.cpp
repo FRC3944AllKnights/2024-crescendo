@@ -88,9 +88,11 @@ RobotContainer::RobotContainer() {
                 if(LimelightHelpers::getTY("") != 0)
                     x = translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
             }
-        
         }
-        else if(m_driverController.GetRightBumper() and LimelightHelpers::getFiducialID("") == 4.0 and LimelightHelpers::getFiducialID("") == 7.0)
+
+        else if(m_driverController.GetRightBumper() and 
+                ((isRed and LimelightHelpers::getFiducialID("") == 4.0) or 
+                (!isRed and LimelightHelpers::getFiducialID("") == 7.0)))
         {
             rotationPID.DisableContinuousInput();
             theta = rotationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
