@@ -19,8 +19,8 @@ public:
     void resetShooterI();
 
 private:
-    rev::CANSparkMax m_ShootyMotorTop{11, rev::CANSparkMax::MotorType::kBrushless};  // Replace '1' with the CAN ID of the Spark MAX
-    rev::CANSparkMax m_ShootyMotorBottom{12, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax m_ShootyMotorTop{shooterTopCANID, rev::CANSparkMax::MotorType::kBrushless};  // Replace '1' with the CAN ID of the Spark MAX
+    rev::CANSparkMax m_ShootyMotorBottom{shooterBottonCANID, rev::CANSparkMax::MotorType::kBrushless};
 
     rev::SparkRelativeEncoder m_ShootyEncoderTop =
         m_ShootyMotorTop.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor);
@@ -32,9 +32,7 @@ private:
     rev::SparkPIDController m_ShootyPIDControllerBottom =
         m_ShootyMotorBottom.GetPIDController();
 
-    frc::Servo leftServo {leftServoChannel};
-    frc::Servo rightServo {rightServoChannel};
-
-    double left_servo_ = 0.6;
-    double right_servo_ = 0.6;
+    //controls shooter feeder
+    rev::CANSparkMax m_LaunchMotorLeft{LaunchMotorLeftCANID, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax m_LaunchMotorRight{LaunchMotorRightCANID, rev::CANSparkMax::MotorType::kBrushless};
 };
