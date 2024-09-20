@@ -71,7 +71,7 @@ RobotContainer::RobotContainer() {
         double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband)*0.8;
 
         //set pid to 90 as a test
-        if(shootingInAmp)
+        if(m_driverController.GetLeftBumper())
         {   
             if(LimelightHelpers::getTX("") != 0)
                 y = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
@@ -88,11 +88,12 @@ RobotContainer::RobotContainer() {
                 if(LimelightHelpers::getTY("") != 0)
                     x = translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
             }
-        
         }
-        else if(shootingInSpeaker)
+
+        else if(m_driverController.GetRightBumper() and 
+                ((isRed and LimelightHelpers::getFiducialID("") == 4.0) or 
+                (!isRed and LimelightHelpers::getFiducialID("") == 7.0)))
         {
-            
             rotationPID.DisableContinuousInput();
             theta = rotationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
         }
