@@ -35,4 +35,13 @@ private:
     //controls shooter feeder
     rev::CANSparkMax m_LaunchMotorLeft{LaunchMotorLeftCANID, rev::CANSparkMax::MotorType::kBrushless};
     rev::CANSparkMax m_LaunchMotorRight{LaunchMotorRightCANID, rev::CANSparkMax::MotorType::kBrushless};
+
+    //pusher motor
+    rev::CANSparkMax m_PusherMotor{PusherMotorCANID, rev::CANSparkMax::MotorType::kBrushless};
+
+     rev::SparkRelativeEncoder m_PusherEncoder =
+        m_PusherMotor.GetEncoder(rev::SparkRelativeEncoder::Type::kHallSensor);
+    rev::SparkPIDController m_PusherPIDController =
+        m_PusherMotor.GetPIDController();
+
 };

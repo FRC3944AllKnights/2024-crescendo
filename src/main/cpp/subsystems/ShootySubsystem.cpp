@@ -25,6 +25,13 @@ ShootySubsystem::ShootySubsystem() {
     m_ShootyPIDControllerBottom.SetD(shooterD);
     m_ShootyPIDControllerBottom.SetFF(0.000015);
     m_ShootyPIDControllerBottom.SetOutputRange(-1, 1);
+
+    m_PusherPIDController.SetP(PusherP);
+    m_PusherPIDController.SetI(PusherI);
+    m_PusherPIDController.SetD(PusherD);
+    m_PusherPIDController.SetFF(0.000015);
+    m_PusherPIDController.SetOutputRange(-1, 1);
+    
 }
 
 bool ShootySubsystem::SetMotorSpeed(double topspeed, double botspeed) {
@@ -50,11 +57,13 @@ void ShootySubsystem::fire(bool fire) {
     {
         m_LaunchMotorLeft.Set(LaunchMotorSpeed);
         m_LaunchMotorRight.Set(-LaunchMotorSpeed);
+        m_PusherPIDController.SetReference(LoadedPosition, rev::ControlType::kPosition);
     }
     else
     {
         m_LaunchMotorLeft.Set(0.0);
         m_LaunchMotorRight.Set(0.0);
+        m_PusherPIDController.SetReference(0, rev::ControlType::kPosition);
     }
 }
 
