@@ -151,12 +151,6 @@ namespace ClimberConstants {
 namespace ShooterConstants {
     constexpr int shooterTopCANID = 11;
     constexpr int shooterBottonCANID = 12;
-    constexpr int leftServoChannel = 1;
-    constexpr int rightServoChannel = 2;
-    constexpr double leftServoInitPosition = 0.99;
-    constexpr double rightServoInitPosition = 0.1;
-    constexpr double leftServoFirePosition = 0.3;
-    constexpr double rightServoFirePosition = 0.7;
     constexpr double ampTopShooterSpeed = 50;//700;
     constexpr double ampBottomShooterSpeed = 1450; //800;
     constexpr double speakerTopShooterSpeed = 1800;
@@ -167,6 +161,7 @@ namespace ShooterConstants {
     constexpr double shooterP = 1.5e-4;
     constexpr double shooterI = 5e-7;
     constexpr double shooterD = 0;
-    
-    
+    constexpr int LaunchMotorLeftCANID = 13;
+    constexpr int LaunchMotorRightCANID = 14;
+    constexpr double LaunchMotorSpeed = 0.5;
 }
