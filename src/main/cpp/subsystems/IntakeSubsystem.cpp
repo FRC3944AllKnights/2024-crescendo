@@ -35,7 +35,7 @@ void IntakeSubsystem::SetIntakeMotorSpeed(double speed) {
     }
     else{
         //m_IntakePIDController.SetReference(0, rev::ControlType::kVelocity);
-        m_IntakeMotor.Set(speed);
+        m_IntakeMotor.Set(0);
         SetColorLED(255, 175, 8);
     }
 }
