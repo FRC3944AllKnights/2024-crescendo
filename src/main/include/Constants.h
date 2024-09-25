@@ -165,8 +165,8 @@ namespace ShooterConstants {
     constexpr int LaunchMotorRightCANID = 14;
     constexpr double LaunchMotorSpeed = 0.5;
     constexpr int PusherMotorCANID = 15;
-    constexpr double PusherP = 1.5e-4;
+    constexpr double PusherP = 0.2;
     constexpr double PusherI = 5e-7;
     constexpr double PusherD = 0;
-    constexpr double LoadedPosition = 0.5 * 10;
+    constexpr double LoadedPosition = -0.25 * 10;
 }

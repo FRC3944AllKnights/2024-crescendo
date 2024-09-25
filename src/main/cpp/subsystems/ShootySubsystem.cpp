@@ -71,6 +71,7 @@ void ShootySubsystem::smartDashboardParams() {
 
     frc::SmartDashboard::PutNumber("Top Shooter RPM", m_ShootyEncoderTop.GetVelocity());
     frc::SmartDashboard::PutNumber("Bottom Shooter RPM", m_ShootyEncoderBottom.GetVelocity());
+    frc::SmartDashboard::PutNumber("Pusher Moter Position", m_PusherEncoder.GetPosition());
 
     //frc::SmartDashboard::PutNumber("Set Left Servo Position", left_servo_);
     //frc::SmartDashboard::PutNumber("Set Right Servo Position", right_servo_);
