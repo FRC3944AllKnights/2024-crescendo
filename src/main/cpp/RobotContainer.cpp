@@ -73,20 +73,20 @@ RobotContainer::RobotContainer() {
         //set pid to 90 as a test
         if(m_driverController.GetLeftBumper())
         {   
-            if(LimelightHelpers::getTX("") != 0)
-                y = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
+            //if(LimelightHelpers::getTX("") != 0)
+            //    y = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
             
             if(isRed){
-                rotationPID.EnableContinuousInput(0,360);
-                theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 270.0);
-                if(LimelightHelpers::getTY("") != 0)
-                    x = -translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
+                //rotationPID.EnableContinuousInput(0,360);
+                //theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 225.0);
+                //if(LimelightHelpers::getTY("") != 0)
+                //    x = -translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
             }
             else{
-                rotationPID.EnableContinuousInput(0,360);
-                theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 90.0);
-                if(LimelightHelpers::getTY("") != 0)
-                    x = translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
+                //rotationPID.EnableContinuousInput(0,360);
+                //theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 135.0);
+                //if(LimelightHelpers::getTY("") != 0)
+                //    x = translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
             }
         }
 
@@ -134,7 +134,7 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kB)
        .WhileTrue(new frc2::RunCommand([this] {m_ShootySubsystem.fire(true);}));
-    //fire note into amp
+    //fire note into amp (THIS IS NOW FOR PASSING!!!)
     frc2::JoystickButton(&m_driverController,
                          frc::XboxController::Button::kLeftBumper)
         .OnFalse(new frc2::InstantCommand([this] 
@@ -158,8 +158,8 @@ void RobotContainer::ConfigureButtonBindings() {
                 shootingInAmp = true;
             }
 
-            bool fireintheholeX = abs(LimelightHelpers::getTX(""))<1.5;
-            bool fireintheholeY = abs(desiredPosYAmp - LimelightHelpers::getTY(""))<1.5;
+            bool fireintheholeX = true;//abs(LimelightHelpers::getTX(""))<1.5;
+            bool fireintheholeY = true;//abs(desiredPosYAmp - LimelightHelpers::getTY(""))<1.5;
             if(m_ShootySubsystem.SetMotorSpeed(ampTopShooterSpeed, ampBottomShooterSpeed) and fireintheholeX and fireintheholeY){
                 m_ShootySubsystem.fire(true);
             }
@@ -189,8 +189,8 @@ void RobotContainer::ConfigureButtonBindings() {
                 shootingInSpeaker = true;
             }
 
-            bool fireintheholeX2 = abs(desiredPosXSpeakr - LimelightHelpers::getTX(""))<2;
-            bool fireintheholeY2 = abs(desiredPosYSpeakr - LimelightHelpers::getTY(""))<4;
+            bool fireintheholeX2 = abs(desiredPosXSpeakr - LimelightHelpers::getTX(""))<3;
+            bool fireintheholeY2 = abs(desiredPosYSpeakr - LimelightHelpers::getTY(""))<5;
 
             if(m_ShootySubsystem.SetMotorSpeed(speakerTopShooterSpeed, speakerBottomShooterSpeed) and fireintheholeX2 and fireintheholeY2){
 

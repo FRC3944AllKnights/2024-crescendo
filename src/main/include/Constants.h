@@ -151,8 +151,8 @@ namespace ClimberConstants {
 namespace ShooterConstants {
     constexpr int shooterTopCANID = 11;
     constexpr int shooterBottonCANID = 12;
-    constexpr double ampTopShooterSpeed = 50;//700;
-    constexpr double ampBottomShooterSpeed = 1450; //800;
+    constexpr double ampTopShooterSpeed = 2550;//50;//700;
+    constexpr double ampBottomShooterSpeed = 2550;//1450; //800;
     constexpr double speakerTopShooterSpeed = 1800;
     constexpr double speakerBottomShooterSpeed = 1800;
     constexpr double desiredPosYAmp = 15.0;
