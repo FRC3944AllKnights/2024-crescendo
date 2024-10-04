@@ -130,10 +130,10 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kA)
        .WhileFalse(new frc2::RunCommand([this] { m_IntakeSubsystem.SetIntakeMotorSpeed(0);})).WhileTrue(new frc2::RunCommand([this] {m_IntakeSubsystem.SetIntakeMotorSpeed(-.6);}));
-    //blind fire button
-    frc2::JoystickButton(&m_driverController,
+    //reverse moter intake
+     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kB)
-       .WhileTrue(new frc2::RunCommand([this] {m_ShootySubsystem.fire(true);}));
+       .WhileFalse(new frc2::RunCommand([this] { m_ShootySubsystem.SetMotorSpeed(0,0);})).WhileTrue(new frc2::RunCommand([this] {m_ShootySubsystem.SetMotorSpeed(-500,-500);}));
     //fire note into amp (THIS IS NOW FOR PASSING!!!)
     frc2::JoystickButton(&m_driverController,
                          frc::XboxController::Button::kLeftBumper)

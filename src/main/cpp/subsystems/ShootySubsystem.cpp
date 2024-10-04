@@ -35,7 +35,7 @@ ShootySubsystem::ShootySubsystem() {
 }
 
 bool ShootySubsystem::SetMotorSpeed(double topspeed, double botspeed) {
-    if (topspeed > 0.0 and botspeed > 0.0)
+    if (topspeed != 0.0 and botspeed != 0.0) 
     {
         m_ShootyPIDControllerTop.SetReference(topspeed, rev::ControlType::kVelocity);
         m_ShootyPIDControllerBottom.SetReference(botspeed, rev::ControlType::kVelocity);
@@ -51,6 +51,7 @@ bool ShootySubsystem::SetMotorSpeed(double topspeed, double botspeed) {
         return false;
     }
 }
+
 
 void ShootySubsystem::fire(bool fire) {
     if(fire) //&& abs(m_ShootyEncoderTop.GetVelocity()) > top_shooter_speed_ && abs(m_ShootyEncoderBottom.GetVelocity()) > bottom_shooter_speed_)
