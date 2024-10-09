@@ -38,7 +38,8 @@ RobotContainer::RobotContainer() {
   // Configure the button bindingsR
   ConfigureButtonBindings();
 
-  shootingInAmp = false; //default to not shooting
+  shootingMidfield = false; //default to not shooting
+  intakingFromSource = false;
   shootingInSpeaker = false;
   isRed = true; //default to red alliance
   if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kBlue)
@@ -53,12 +54,13 @@ RobotContainer::RobotContainer() {
       [this] {
         //set default values based on joysticks
         double y = -frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband);
+        //FUTURE IMPROVEMENTS: MAKE THIS MESSY BLOCK OF CODE A FUNCTION!
         if (y<0){
             y = -y*y*1.09;
         }
         else
         {
-            y = y*y*y*1.09;
+            y = y*y*1.09;
         }
         double x = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband);
         if (x<0){
@@ -70,29 +72,41 @@ RobotContainer::RobotContainer() {
         }
         double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband)*0.8;
 
-        //set pid to 90 as a test
-        if(m_driverController.GetLeftBumper())
+        //hijack all controls to align with source
+        if(m_driverController.GetBButton())
         {   
-            //if(LimelightHelpers::getTX("") != 0)
-            //    y = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
+            double xComponent;
+            double yComponent;
+            double translationTheta = (isRed) ? 60 : 120;
+            if(LimelightHelpers::getTX("") != 0)
+            {
+                xComponent = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0)*cos(translationTheta);
+                yComponent = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0)*sin(translationTheta);
+            }
+            //if(LimelightHelpers::getTY("") != 0)
+            //        x = translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
             
+            rotationPID.EnableContinuousInput(0,360);
+            theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), translationTheta);
+
+        }
+
+        //hijack theta to turn toward the correct angle for a mid field shot
+        else if(m_driverController.GetLeftBumper()) {
             if(isRed){
-                //rotationPID.EnableContinuousInput(0,360);
-                //theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 225.0);
-                //if(LimelightHelpers::getTY("") != 0)
-                //    x = -translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
+                rotationPID.EnableContinuousInput(0,360);
+                theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 225.0);
             }
             else{
-                //rotationPID.EnableContinuousInput(0,360);
-                //theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 135.0);
-                //if(LimelightHelpers::getTY("") != 0)
-                //    x = translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
+                rotationPID.EnableContinuousInput(0,360);
+                theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 135.0);
             }
         }
 
+        //hijack theta to turn toward the speaker
         else if(m_driverController.GetRightBumper() and 
-                ((isRed and LimelightHelpers::getFiducialID("") == 4.0) or 
-                (!isRed and LimelightHelpers::getFiducialID("") == 7.0)))
+                ((isRed and LimelightHelpers::getFiducialID("") == Tags::redSpeakerMiddle) or 
+                (!isRed and LimelightHelpers::getFiducialID("") == Tags::blueSpeakerMiddle)))
         {
             rotationPID.DisableContinuousInput();
             theta = rotationPID.Calculate(LimelightHelpers::getTX(""), 0.0);
@@ -133,34 +147,35 @@ void RobotContainer::ConfigureButtonBindings() {
     //reverse moter intake
      frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kB)
-       .WhileFalse(new frc2::RunCommand([this] { m_ShootySubsystem.SetMotorSpeed(0,0);})).WhileTrue(new frc2::RunCommand([this] {m_ShootySubsystem.SetMotorSpeed(-500,-500);}));
-    //fire note into amp (THIS IS NOW FOR PASSING!!!)
+       .OnFalse(new frc2::RunCommand([this] { 
+            m_ShootySubsystem.SetMotorSpeed(0,0);
+            intakingFromSource = false;
+        })).WhileTrue(new frc2::RunCommand([this] {
+            m_ShootySubsystem.SetMotorSpeed(intakeSpeedTop,intakeSpeedBottom);
+            if(!intakingFromSource){ //set tag to the correct ID
+                m_ShootySubsystem.resetShooterI();
+                if(isRed){
+                    currentTag = Tags::redSource;
+                }
+                else{
+                    currentTag = Tags::blueSource;
+                }
+                LimelightHelpers::setPriorityTagID("", currentTag);
+                intakingFromSource = true;
+            }
+        }));
+    //Pass note to mid field
     frc2::JoystickButton(&m_driverController,
                          frc::XboxController::Button::kLeftBumper)
         .OnFalse(new frc2::InstantCommand([this] 
         { 
-            shootingInAmp = false;
+            shootingMidfield = false;
             m_ShootySubsystem.SetMotorSpeed(0.0, 0.0);
             m_ShootySubsystem.fire(false);
         })).WhileTrue(new frc2::RunCommand([this] 
         {
-            if(!shootingInAmp){ //set tag to the correct ID
-
-                m_ShootySubsystem.resetShooterI();
-
-                if(isRed){
-                    currentTag = 5;
-                }
-                else{
-                    currentTag = 6;
-                }
-                LimelightHelpers::setPriorityTagID("", currentTag);
-                shootingInAmp = true;
-            }
-
-            bool fireintheholeX = true;//abs(LimelightHelpers::getTX(""))<1.5;
-            bool fireintheholeY = true;//abs(desiredPosYAmp - LimelightHelpers::getTY(""))<1.5;
-            if(m_ShootySubsystem.SetMotorSpeed(ampTopShooterSpeed, ampBottomShooterSpeed) and fireintheholeX and fireintheholeY){
+            shootingMidfield = true;
+            if(m_ShootySubsystem.SetMotorSpeed(midfieldTopShooterSpeed, midfieldBottomShooterSpeed)){
                 m_ShootySubsystem.fire(true);
             }
         }));
@@ -175,15 +190,13 @@ void RobotContainer::ConfigureButtonBindings() {
         })).WhileTrue(new frc2::RunCommand([this] 
         {
             if(!shootingInSpeaker){ //set tag to the correct ID
-
                 m_ShootySubsystem.resetShooterI();
-
                 if(isRed){
-                    currentTag = 4;
+                    currentTag = Tags::redSpeakerMiddle;
                     
                 }
                 else{
-                    currentTag = 7;
+                    currentTag = Tags::blueSpeakerMiddle;
                 }
                 LimelightHelpers::setPriorityTagID("", currentTag);
                 shootingInSpeaker = true;

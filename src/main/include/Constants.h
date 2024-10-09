@@ -151,10 +151,14 @@ namespace ClimberConstants {
 namespace ShooterConstants {
     constexpr int shooterTopCANID = 11;
     constexpr int shooterBottonCANID = 12;
-    constexpr double ampTopShooterSpeed = 2550;//50;//700;
-    constexpr double ampBottomShooterSpeed = 2550;//1450; //800;
+    constexpr double ampTopShooterSpeed = 50;//50;//700;
+    constexpr double ampBottomShooterSpeed = 1450;//1450; //800;
+    constexpr double midfieldTopShooterSpeed = 500; //2550
+    constexpr double midfieldBottomShooterSpeed = 500; //2550
     constexpr double speakerTopShooterSpeed = 1800;
     constexpr double speakerBottomShooterSpeed = 1800;
+    constexpr double intakeSpeedTop = -500;
+    constexpr double intakeSpeedBottom = -500;
     constexpr double desiredPosYAmp = 15.0;
     constexpr double desiredPosYSpeakr = -15.5;
     constexpr double desiredPosXSpeakr = 0.0;
@@ -169,4 +173,13 @@ namespace ShooterConstants {
     constexpr double PusherI = 5e-7;
     constexpr double PusherD = 0;
     constexpr double LoadedPosition = -0.25 * 10;
+}
+
+namespace Tags {
+    constexpr double redAmp = 5;
+    constexpr double blueAmp = 6;
+    constexpr double blueSpeakerMiddle = 7;
+    constexpr double redSpeakerMiddle = 4;
+    constexpr double blueSource = 2; //1 further from driver station, 2 closer
+    constexpr double redSource = 11; //10 further from driver station, 9 closer
 }

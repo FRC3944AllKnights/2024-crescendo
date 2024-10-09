@@ -41,6 +41,8 @@ class RobotContainer {
 
   bool isRed;
   bool shootingInAmp;
+  bool intakingFromSource;
+  bool shootingMidfield;
   bool shootingInSpeaker;
   int currentTag;
 
@@ -63,7 +65,7 @@ class RobotContainer {
 
 
   frc::PIDController translationPID{0.0125, 1.0e-3, 0.0};
-  frc::PIDController rotationPID{0.01, 5.5e-3, 0.0};
+  frc::PIDController rotationPID{0.01, 0.0, 0.0};
 
   void ConfigureButtonBindings();
 };
