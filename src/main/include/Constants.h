@@ -153,14 +153,15 @@ namespace ShooterConstants {
     constexpr int shooterBottonCANID = 12;
     constexpr double ampTopShooterSpeed = 50;//50;//700;
     constexpr double ampBottomShooterSpeed = 1450;//1450; //800;
-    constexpr double midfieldTopShooterSpeed = 500; //2550
-    constexpr double midfieldBottomShooterSpeed = 500; //2550
+    constexpr double midfieldTopShooterSpeed = 2550; //2550
+    constexpr double midfieldBottomShooterSpeed = 2550; //2550
     constexpr double speakerTopShooterSpeed = 1800;
     constexpr double speakerBottomShooterSpeed = 1800;
     constexpr double intakeSpeedTop = -500;
     constexpr double intakeSpeedBottom = -500;
     constexpr double desiredPosYAmp = 15.0;
     constexpr double desiredPosYSpeakr = -15.5;
+    constexpr double desiredPosYSource = 12.96;
     constexpr double desiredPosXSpeakr = 0.0;
     constexpr double shooterP = 1.5e-4;
     constexpr double shooterI = 5e-7;
@@ -180,6 +181,6 @@ namespace Tags {
     constexpr double blueAmp = 6;
     constexpr double blueSpeakerMiddle = 7;
     constexpr double redSpeakerMiddle = 4;
-    constexpr double blueSource = 2; //1 further from driver station, 2 closer
-    constexpr double redSource = 11; //10 further from driver station, 9 closer
+    constexpr double blueSource = 1; //1 further from driver station, 2 closer
+    constexpr double redSource = 10; //10 further from driver station, 9 closer
 }

@@ -46,6 +46,8 @@ class RobotContainer {
   bool shootingInSpeaker;
   int currentTag;
 
+  double PI = 3.14159;
+
   // The robot's subsystems and commands are defined here...
 
   // The robot's subsystems
@@ -64,8 +66,9 @@ class RobotContainer {
   frc2::CommandPtr m_EpicShooterThreeYeahBaby = autos::EpicShooterThreeYeahBaby(&m_drive, &m_ShootySubsystem, &m_IntakeSubsystem);
 
 
-  frc::PIDController translationPID{0.0125, 1.0e-3, 0.0};
+  frc::PIDController translationPID{0.0125, 0.0, 0.0};
   frc::PIDController rotationPID{0.01, 0.0, 0.0};
 
   void ConfigureButtonBindings();
+  double DegreeToRad(double degree);
 };

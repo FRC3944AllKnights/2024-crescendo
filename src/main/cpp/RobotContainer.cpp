@@ -77,14 +77,24 @@ RobotContainer::RobotContainer() {
         {   
             double xComponent;
             double yComponent;
-            double translationTheta = (isRed) ? 60 : 120;
+            double translationTheta = (isRed) ? 60 : 300;
             if(LimelightHelpers::getTX("") != 0)
             {
-                xComponent = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0)*cos(translationTheta);
-                yComponent = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0)*sin(translationTheta);
+                xComponent = translationPID.Calculate(LimelightHelpers::getTX(""), 0.0)*cos(DegreeToRad(translationTheta));
+                yComponent = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0)*sin(DegreeToRad(translationTheta));
             }
-            //if(LimelightHelpers::getTY("") != 0)
-            //        x = translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYAmp);
+
+            if(LimelightHelpers::getTY("") != 0) //and abs(LimelightHelpers::getTX("")) < 2)
+            {
+                xComponent += translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYSource)*sin(DegreeToRad(translationTheta));
+                yComponent += translationPID.Calculate(LimelightHelpers::getTY(""), desiredPosYSource)*cos(DegreeToRad(translationTheta));
+            }
+            
+
+            frc::SmartDashboard::PutNumber("X COMPONENT",xComponent);
+            frc::SmartDashboard::PutNumber("y COMPONENT",yComponent);
+            x = xComponent;
+            y = yComponent;
             
             rotationPID.EnableContinuousInput(0,360);
             theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), translationTheta);
@@ -93,14 +103,9 @@ RobotContainer::RobotContainer() {
 
         //hijack theta to turn toward the correct angle for a mid field shot
         else if(m_driverController.GetLeftBumper()) {
-            if(isRed){
-                rotationPID.EnableContinuousInput(0,360);
-                theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 225.0);
-            }
-            else{
-                rotationPID.EnableContinuousInput(0,360);
-                theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 135.0);
-            }
+            rotationPID.EnableContinuousInput(0,360);
+            double desiredTheta = (isRed) ? 225.0 : 135.0;
+            theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), desiredTheta);
         }
 
         //hijack theta to turn toward the speaker
@@ -231,4 +236,8 @@ void RobotContainer::ConfigureButtonBindings() {
 
 frc2::Command* RobotContainer::GetAutonomousCommand() {
  return m_chooser.GetSelected();
+}
+
+double RobotContainer::DegreeToRad(double degree){
+    return degree*PI/180;
 }
