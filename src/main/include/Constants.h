@@ -134,8 +134,8 @@ constexpr double kPThetaController = 0.5;
 extern const frc::TrapezoidProfile<units::radians>::Constraints
     kThetaControllerConstraints;
 
-constexpr auto xSpeed = 0.4_mps;
-constexpr auto ySpeed = 0.5_mps;
+constexpr auto xSpeed = 0.3_mps;
+constexpr auto ySpeed = 0.4_mps;
 }  // namespace AutoConstants
 
 namespace OIConstants {
