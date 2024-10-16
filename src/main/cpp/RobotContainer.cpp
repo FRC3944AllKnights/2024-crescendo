@@ -149,11 +149,11 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kA)
        .WhileFalse(new frc2::RunCommand([this] { m_IntakeSubsystem.SetIntakeMotorSpeed(0);})).WhileTrue(new frc2::RunCommand([this] {m_IntakeSubsystem.SetIntakeMotorSpeed(-.6);}));
-    //reverse moter intake
+    //reverse motor intake
      frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kB)
-       .OnFalse(new frc2::RunCommand([this] { 
-            m_ShootySubsystem.SetMotorSpeed(0,0);
+       .OnFalse(new frc2::InstantCommand([this] { 
+            m_ShootySubsystem.SetMotorSpeed(0.0, 0.0);
             intakingFromSource = false;
         })).WhileTrue(new frc2::RunCommand([this] {
             m_ShootySubsystem.SetMotorSpeed(intakeSpeedTop,intakeSpeedBottom);
